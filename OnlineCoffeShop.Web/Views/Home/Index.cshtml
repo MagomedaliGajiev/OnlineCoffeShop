@@ -1,8 +1,14 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@model IEnumerable<OnlineCoffeShop.Web.Models.Product>
+@{
+    ViewData["Title"] = "Товары";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@foreach (var product in Model)
+{
+    <div>
+        <div>@product.Id</div>
+        <div>@product.Name</div>
+        <div>@product.Cost</div>
+    </div>
+    <br />
+}
