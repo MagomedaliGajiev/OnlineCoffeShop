@@ -26,4 +26,6 @@ public static class ProductsRepository
     ];
 
     public static IReadOnlyList<Product> GetAll() => _products;
+    
+    public static Product? TryGetById(Guid id) => _products.FirstOrDefault(p => p.Id == id);
 }

@@ -8,9 +8,7 @@ public class ProductController : Controller
 {
     public IActionResult Index(Guid id)
     {
-        var product = ProductsRepository
-            .GetAll()
-            .FirstOrDefault(p => p.Id == id);
+        var product = ProductsRepository.TryGetById(id);
 
         if (product is null)
         {
