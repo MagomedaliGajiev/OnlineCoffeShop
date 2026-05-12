@@ -1,39 +1,15 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using OnlineCoffeShop.Web.Models;
+using OnlineCoffeShop.Web.Repositories;
 
 namespace OnlineCoffeShop.Web.Controllers;
 
 public class HomeController : Controller
 {
-    public static readonly List<Product> Products =
-    [
-        new Product
-        {
-            Id = Guid.NewGuid(),
-            Name = "Эспрессо",
-            Cost = 150m,
-            Description = "Классический крепкий кофе, приготовленный под давлением."
-        },
-        new Product
-        {
-            Id = Guid.NewGuid(),
-            Name = "Капучино",
-            Cost = 220m,
-            Description = "Эспрессо с молоком и густой молочной пенкой."
-        },
-        new Product
-        {
-            Id = Guid.NewGuid(),
-            Name = "Латте",
-            Cost = 250m,
-            Description = "Нежный кофейный напиток с большим количеством молока."
-        }
-    ];
-
     public IActionResult Index()
     {
-        return View(Products);
+        return View(ProductsRepository.GetAll());
     }
 
     public IActionResult Privacy()
