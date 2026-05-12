@@ -6,7 +6,7 @@ namespace OnlineCoffeShop.Web.Controllers;
 
 public class HomeController : Controller
 {
-    private static readonly List<Product> Products =
+    public static readonly List<Product> Products =
     [
         new Product
         {
