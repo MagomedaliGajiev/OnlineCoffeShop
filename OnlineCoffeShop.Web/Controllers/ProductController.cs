@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using OnlineCoffeShop.Web.Models;
 using OnlineCoffeShop.Web.Repositories;
 
 namespace OnlineCoffeShop.Web.Controllers;
