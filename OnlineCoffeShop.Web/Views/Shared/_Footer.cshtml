@@ -1,0 +1,36 @@
+﻿@{
+    var catalog = new[] { "Зерновой кофе", "Молотый кофе", "Кофемолки", "Заварочные устройства", "Подарочные наборы" };
+    var help = new[] { "Доставка и оплата", "Возврат 14 дней", "Программа лояльности", "Гид по обжарке", "FAQ" };
+    var contacts = new[] { "+7 (800) 123-45-67", "hello@beanhouse.coffee", "Москва, ул. Покровка, 14", "Ежедневно 09:00 – 22:00", "@beanhouse" };
+}
+<footer class="bottombar">
+    <div class="shell">
+        <div class="grid">
+            <div>
+                <div class="brand">
+                    <div class="brand-mark">B</div>
+                    <span class="brand-name">BeanHouse</span>
+                </div>
+                <p class="about">
+                    Свежий кофе прямой обжарки. Мы знаем фермы, регионы и даты — а вы получаете чашку, какой она задумана.
+                </p>
+            </div>
+            <div>
+                <h4>Каталог</h4>
+                <ul>@foreach (var s in catalog) { <li>@s</li> }</ul>
+            </div>
+            <div>
+                <h4>Помощь</h4>
+                <ul>@foreach (var s in help) { <li>@s</li> }</ul>
+            </div>
+            <div>
+                <h4>Контакты</h4>
+                <ul>@foreach (var s in contacts) { <li>@s</li> }</ul>
+            </div>
+        </div>
+        <div class="legal">
+            <span>© 2026 BeanHouse Coffee Shop</span>
+            <span>Политика конфиденциальности · Оферта</span>
+        </div>
+    </div>
+</footer>

@@ -1,19 +1,30 @@
 using Microsoft.AspNetCore.Mvc;
+using OnlineCoffeShop.Web.Models;
 using OnlineCoffeShop.Web.Repositories;
+using OnlineCoffeShop.Web.Service.Abstractions;
 
 namespace OnlineCoffeShop.Web.Controllers;
 
 public class ProductController : Controller
 {
-    public IActionResult Index(Guid id)
+    private readonly IFavoritesService _fav;
+
+    public ProductController(IFavoritesService fav)
     {
-        var product = ProductsRepository.TryGetById(id);
+        _fav = fav;
+    }
 
-        if (product is null)
+    [Route("/product/{slug}")]
+    public IActionResult Details(string slug)
+    {
+        var product = ProductsRepository.TryGetBySlug(slug) ?? ProductsRepository.GetAll()[0];
+
+        var vm = new ProductDetailsViewModel
         {
-            return NotFound();
-        }
+            Product = product,
+            IsFav = _fav.IsFav(product.Id),
+        };
 
-        return View(product);
+        return View(vm);
     }
 }

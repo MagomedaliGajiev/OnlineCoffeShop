@@ -1,0 +1,255 @@
+@model ProductDetailsViewModel
+@{
+    ViewData["Title"] = Model.Product.Name;
+    var p = Model.Product;
+    var ru = new System.Globalization.CultureInfo("ru-RU");
+    var grindOpts = new[] { ("whole", "В зёрнах"), ("espresso", "Эспрессо"), ("turka", "Турка"), ("french", "Френч-пресс"), ("v60", "V60") };
+    var weightOpts = new[] { "100", "250", "500", "1000" };
+    var thumbColors = new[] { "#5a3a22", "#6b4423", "#8b6f4e", "#d4a373" };
+    var tab = (Context.Request.Query["tab"].ToString() is var t && !string.IsNullOrEmpty(t)) ? t : "desc";
+}
+<div class="screen">
+    <div class="shell">
+        <div class="crumb">
+            <a asp-controller="Home" asp-action="Index">Главная</a><span class="sep">/</span>
+            <a asp-controller="Home" asp-action="Index">Каталог</a><span class="sep">/</span>
+            <a asp-controller="Home" asp-action="Index" asp-route-filter="@p.Category.Slug()">@p.Category.DisplayName()</a><span class="sep">/</span>
+            <span class="curr">@p.Name</span>
+        </div>
+
+        <div class="product-layout">
+            <div>
+                <div class="gallery-main">
+                    <partial name="_ProductArt" model="p" />
+                    <form method="post" asp-controller="Fav" asp-action="Toggle" asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@p.Id" />
+                        <button type="submit" class="heart @(Model.IsFav ? "on" : "")">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="@(Model.IsFav ? "currentColor" : "none")" stroke="currentColor" stroke-width="1.8">
+                                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                            </svg>
+                        </button>
+                    </form>
+                    @if (p.Tag == ProductTag.Sale && p.OldPrice.HasValue)
+                    {
+                        <span class="tag tag-sale tag-lg">−@p.DiscountPercent%</span>
+                    }
+                </div>
+                <div class="gallery-thumbs">
+                    @for (var i = 0; i < 4; i++)
+                    {
+                        <div class="gallery-thumb">
+                            <div class="gallery-thumb-inner" style="background:@thumbColors[i]">
+                                <div class="gallery-thumb-shape"></div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div>
+                <div class="product-tags">
+                    @if (p.Tag == ProductTag.New) { <span class="tag tag-new">NEW</span> }
+                    <span class="tag tag-stock">✓ В наличии</span>
+                </div>
+                <h1 class="h-display product-name">@p.Name</h1>
+                <div class="muted product-type">@p.Type @(p.Roast is null ? "" : "· " + p.Roast + " обжарка ")@(p.WeightGrams is null ? "" : "· " + p.WeightGrams + " г")</div>
+
+                <div class="product-rating-row">
+                    <div class="rating-row">
+                        @{ var full = (int)Math.Round(p.AverageRating); }
+                        <div class="rating-stars">
+                            @for (var i = 0; i < 5; i++)
+                            {
+                                <svg viewBox="0 0 24 24" fill="@(i < full ? "currentColor" : "none")" stroke="currentColor" stroke-width="1.5">
+                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                </svg>
+                            }
+                        </div>
+                        <span class="rating-score">@p.AverageRating.ToString("0.#", System.Globalization.CultureInfo.InvariantCulture)</span>
+                        <span class="muted">(@p.ReviewCount)</span>
+                    </div>
+                </div>
+
+                <div class="product-price-row">
+                    <span class="product-price">@p.Price.ToString("N0", ru) ₽</span>
+                    @if (p.OldPrice.HasValue)
+                    {
+                        <span class="muted product-price-old">@p.OldPrice.Value.ToString("N0", ru) ₽</span>
+                    }
+                </div>
+
+                <form method="post" asp-controller="Cart" asp-action="Add" asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@p.Id" />
+
+                    @if (p.Category == ProductCategory.Coffee)
+                    {
+                        <div class="field-label">Помол</div>
+                        <div class="product-chips-row" id="grind-row">
+                            @{ var firstG = true; }
+                            @foreach (var (v, l) in grindOpts)
+                            {
+                                <label class="chip chip-md @(firstG ? "active" : "")">
+                                    <input type="radio" name="grind" value="@v" class="sr-only" checked="@firstG" onchange="document.querySelectorAll('#grind-row label').forEach(x=>x.classList.remove('active'));this.parentElement.classList.add('active');" />
+                                    @l
+                                </label>
+                                firstG = false;
+                            }
+                        </div>
+                        <div class="field-label">Вес</div>
+                        <div class="product-chips-row product-chips-row-tight" id="weight-row">
+                            @foreach (var w in weightOpts)
+                            {
+                                var label = w == "1000" ? "1 кг" : w + " г";
+                                var active = w == "250";
+                                <label class="chip chip-md @(active ? "active" : "")" style="min-width:72px">
+                                    <input type="radio" name="weight" value="@w" class="sr-only" checked="@active" onchange="document.querySelectorAll('#weight-row label').forEach(x=>x.classList.remove('active'));this.parentElement.classList.add('active');" />
+                                    @label
+                                </label>
+                            }
+                        </div>
+                    }
+
+                    <div class="field-label">Количество</div>
+                    <div class="qty-buy-row">
+                        <div class="qty-stepper-lg">
+                            <button type="button" onclick="var i=this.nextElementSibling.querySelector('input');i.value=Math.max(1,parseInt(i.value)-1);this.nextElementSibling.querySelector('span').textContent=i.value">−</button>
+                            <div style="position:relative">
+                                <span class="qty">1</span>
+                                <input type="number" name="qty" value="1" min="1" />
+                            </div>
+                            <button type="button" onclick="var i=this.previousElementSibling.querySelector('input');i.value=parseInt(i.value)+1;this.previousElementSibling.querySelector('span').textContent=i.value">+</button>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-buy">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />
+                                <line x1="3" y1="6" x2="21" y2="6" />
+                                <path d="M16 10a4 4 0 0 1-8 0" />
+                            </svg>
+                            Добавить в корзину
+                        </button>
+                    </div>
+                </form>
+                <form method="post" asp-controller="Fav" asp-action="Toggle" asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)" class="fav-side">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@p.Id" />
+                    <button type="submit" class="btn btn-ghost btn-square">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="@(Model.IsFav ? "currentColor" : "none")" stroke="currentColor" stroke-width="1.8">
+                            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                        </svg>
+                    </button>
+                </form>
+
+                <div class="shipping-card">
+                    <div class="shipping-row">
+                        <span class="shipping-icon">→</span>
+                        <span><b>Бесплатная доставка от 2 000 ₽.</b> Курьером по Москве — завтра 10:00–22:00.</span>
+                    </div>
+                    <div class="shipping-row">
+                        <span class="shipping-icon">↻</span>
+                        <span><b>СДЭК по России</b> — 2–4 рабочих дня. <b>Самовывоз</b> из шоурума на Покровке — сегодня.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="tabs-bar">
+                @foreach (var (k, l) in new[] { ("desc", "Описание"), ("specs", "Характеристики"), ("reviews", $"Отзывы ({p.ReviewCount})"), ("delivery", "Доставка") })
+                {
+                    <a href="?tab=@k" class="tab-link @(tab == k ? "active" : "")">@l</a>
+                }
+            </div>
+
+            <div class="tab-content @(tab == "desc" ? "" : "tab-content-full")">
+                @if (tab == "desc")
+                {
+                    <div>
+                        @if (p.Notes is { Length: > 0 })
+                        {
+                            <div class="field-label" style="font-size:14px;margin-bottom:12px">Дегустационные ноты</div>
+                            <div class="notes-row">
+                                @foreach (var n in p.Notes)
+                                {
+                                    <span class="note-pill">@n</span>
+                                }
+                            </div>
+                        }
+                        <p class="blurb">@p.Blurb</p>
+                    </div>
+                    <div class="brew-card">
+                        <div class="field-label" style="font-size:14px;margin-bottom:14px">Как заваривать</div>
+                        <div class="brew-rows">
+                            @foreach (var (k, v) in new[] { ("18 г", "кофе на чашку"), ("1:16", "пропорция к воде"), ("92–94°C", "температура"), ("2:30", "время заваривания") })
+                            {
+                                <div class="brew-row">
+                                    <span class="muted">@v</span>
+                                    <span class="brew-row-k">@k</span>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
+                else if (tab == "specs")
+                {
+                    <div class="specs-list">
+                        @foreach (var (k, v) in p.Specs)
+                        {
+                            <div class="spec-row">
+                                <span class="muted">@k</span>
+                                <span class="spec-row-v">@v</span>
+                            </div>
+                        }
+                    </div>
+                }
+                else if (tab == "reviews")
+                {
+                    <div class="reviews-list">
+                        @foreach (var (n, r, d, body) in new[]
+                        {
+                            ("Анна К.", 5, "07.05.2026", "Шикарный кофе. Яркая кислинка, цветочные ноты, идеально для V60. Заказываю уже четвёртый раз."),
+                            ("Дмитрий М.", 5, "02.05.2026", "Очень свежая обжарка, чувствуется. Упаковка плотная, дегаз клапан есть."),
+                            ("Олег П.", 4, "28.04.2026", "Хороший кофе для светлой обжарки, но дороговато. В целом доволен.")
+                        })
+                        {
+                            <div class="review-card">
+                                <div class="review-head">
+                                    <span class="review-name">@n</span>
+                                    <span class="review-stars">
+                                        @for (var i = 0; i < 5; i++)
+                                        {
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="@(i < r ? "currentColor" : "none")" stroke="currentColor" stroke-width="1.5">
+                                                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                            </svg>
+                                        }
+                                    </span>
+                                    <span class="review-date">@d</span>
+                                </div>
+                                <p class="review-body">@body</p>
+                            </div>
+                        }
+                    </div>
+                }
+                else if (tab == "delivery")
+                {
+                    <div class="delivery-cards">
+                        @foreach (var (title, descr, price) in new[]
+                        {
+                            ("Курьер по Москве", "Завтра, 10:00–22:00", "Бесплатно от 2 000 ₽, иначе 290 ₽"),
+                            ("Самовывоз", "Сегодня, шоурум на Покровке", "Бесплатно"),
+                            ("СДЭК по России", "2–4 рабочих дня", "от 290 ₽, расчёт на чек-ауте")
+                        })
+                        {
+                            <div class="delivery-card">
+                                <div class="delivery-card-title">@title</div>
+                                <div class="delivery-card-sub">@descr</div>
+                                <div class="delivery-card-price">@price</div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

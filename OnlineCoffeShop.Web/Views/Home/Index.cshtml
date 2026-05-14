@@ -1,16 +1,140 @@
-@model IEnumerable<Product>
+@model HomeViewModel
 @{
-    ViewData["Title"] = "Товары";
+    ViewData["Title"] = "Главная";
+    var cats = Model.Categories;
+    var catColors = new[] { "#6b4423", "#8b6f4e", "#3d2817", "#d4a373", "#e76f51" };
+    var roastOpts = new[] { "Светлая", "Средняя", "Средне-тёмная", "Тёмная" };
+    var originOpts = new[] { "Эфиопия", "Колумбия", "Гватемала", "Бразилия" };
+    string ActiveChip(string filter) => Model.Filter == filter ? "chip active" : "chip";
+    string FilterUrl(string? cat = null)
+        => Url.Action("Index", "Home", new
+        {
+            filter = cat ?? Model.Filter,
+            roast = Model.Roast,
+            origin = Model.Origin,
+            sort = Model.Sort
+        })!;
 }
-
-@foreach (var product in Model)
-{
-    <div>
-        <div>@product.Id</div>
-        <div>
-            <a asp-controller="Product" asp-action="Index" asp-route-id="@product.Id">@product.Name</a>
+<div class="screen">
+    <section class="hero">
+        <div class="shell hero-inner">
+            <div class="hero-content">
+                <div class="hero-eyebrow">
+                    <span class="hero-eyebrow-dot"></span> Обжарка — каждый понедельник
+                </div>
+                <h1 class="h-display hero-title">
+                    Свежеобжаренный<br />
+                    <span class="accent">кофе</span> <span class="serif accent-soft">прямиком от обжарщиков</span>
+                </h1>
+                <p class="hero-lead">
+                    Моносорта из Эфиопии, Колумбии, Гватемалы и Бразилии. Знаем регион, ферму и дату обжарки каждой партии — обжариваем под ваш помол.
+                </p>
+                <div class="hero-actions">
+                    <a class="btn btn-ochre" href="#catalog">Открыть каталог →</a>
+                    <a class="btn btn-ghost-dark">Гид по обжарке</a>
+                </div>
+                <div class="hero-stats">
+                    @foreach (var (k, v) in new[] { ("115+", "моносортов в каталоге"), ("3 дня", "от обжарки до отправки"), ("4.9★", "на 2 400+ отзывов") })
+                    {
+                        <div>
+                            <div class="hero-stat-k">@k</div>
+                            <div class="hero-stat-v">@v</div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="hero-art">
+                <div class="hero-art-glow"></div>
+                <div class="hero-art-bag">
+                    <partial name="_ProductArt" model="Model.Hero" />
+                </div>
+                <div class="hero-card">
+                    <div class="hero-card-name">@Model.Hero.Name</div>
+                    <div class="muted hero-card-meta">обжарено 08.05 · SCA 87.5</div>
+                </div>
+            </div>
         </div>
-        <div>@product.Cost</div>
+    </section>
+
+    <div class="shell" id="catalog" style="padding-top:56px">
+        <div class="row-between">
+            <h2 class="h-section">Категории</h2>
+            <span class="muted" style="font-size:13.5px">115 товаров · 12 стран происхождения</span>
+        </div>
+        <div class="cat-grid">
+            @for (var i = 0; i < cats.Count; i++)
+            {
+                var c = cats[i];
+                <button class="pcard cat-card">
+                    <div class="cat-thumb" style="background:@catColors[i]"></div>
+                    <div class="cat-name">@c.Name</div>
+                    <div class="cat-count">@c.Count товаров</div>
+                </button>
+            }
+        </div>
+
+        <div class="row-between">
+            <h2 class="h-section">Популярное</h2>
+        </div>
+        <form method="get" class="filter-bar">
+            <span class="filter-bar-label">Фильтры:</span>
+            <a class="@ActiveChip("all")" href="@FilterUrl("all")">Все</a>
+            <a class="@ActiveChip("coffee")" href="@FilterUrl("coffee")">Кофе</a>
+            <a class="@ActiveChip("gear")" href="@FilterUrl("gear")">Оборудование</a>
+            <a class="@ActiveChip("gift")" href="@FilterUrl("gift")">Подарки</a>
+
+            <select name="roast" class="chip chip-select" onchange="this.form.submit()">
+                <option value="">Обжарка: все</option>
+                @foreach (var r in roastOpts)
+                {
+                    <option value="@r" selected="@(Model.Roast == r)">@r</option>
+                }
+            </select>
+            <select name="origin" class="chip chip-select" onchange="this.form.submit()">
+                <option value="">Страна: все</option>
+                @foreach (var o in originOpts)
+                {
+                    <option value="@o" selected="@(Model.Origin == o)">@o</option>
+                }
+            </select>
+
+            <input type="hidden" name="filter" value="@Model.Filter" />
+            <span class="filter-bar-spacer muted">Сортировка:</span>
+            <select name="sort" class="chip chip-select" onchange="this.form.submit()">
+                <option value="popular" selected="@(Model.Sort == "popular")">По популярности</option>
+                <option value="price-asc" selected="@(Model.Sort == "price-asc")">Цена: по возрастанию</option>
+                <option value="price-desc" selected="@(Model.Sort == "price-desc")">Цена: по убыванию</option>
+                <option value="rating" selected="@(Model.Sort == "rating")">По рейтингу</option>
+            </select>
+        </form>
+
+        <div class="product-grid">
+            @foreach (var p in Model.Products)
+            {
+                <partial name="_ProductCard" model="@(new ProductCardModel{ Product = p, IsFav = Model.Favs.Contains(p.Id), ReturnUrl = Context.Request.Path + Context.Request.QueryString })" />
+            }
+        </div>
+
+        @if (Model.Products.Count == 0)
+        {
+            <div class="empty-grid">Ничего не найдено. Сбросьте фильтры.</div>
+        }
+
+        <div class="benefits">
+            @foreach (var (t, d) in new[]
+            {
+                ("Свежая обжарка", "Каждый понедельник, отправка в течение 72 часов"),
+                ("Бесплатная доставка", "По Москве от 2 000 ₽ · СДЭК по России"),
+                ("Возврат 14 дней", "Если вкус не подошёл — вернём деньги"),
+                ("Прозрачность", "Регион, ферма, дата обжарки на каждой упаковке")
+            })
+            {
+                <div>
+                    <div class="benefit-icon">·</div>
+                    <div class="benefit-title">@t</div>
+                    <div class="benefit-desc">@d</div>
+                </div>
+            }
+        </div>
     </div>
-    <br />
-}
+</div>
