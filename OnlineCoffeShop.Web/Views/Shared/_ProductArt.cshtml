@@ -1,0 +1,28 @@
+﻿@model Product
+@{
+    var nameShort = string.Join(' ', Model.Name.Split(' ').Take(2));
+}
+@if (Model.Art == ArtStyle.Gear)
+{
+    <div class="bean-art gear"><div class="gear-art"></div></div>
+}
+else if (Model.Art == ArtStyle.Gift)
+{
+    <div class="bean-art gift"><div class="gift-art"></div></div>
+}
+else if (Model.Art == ArtStyle.Tan)
+{
+    <div class="bean-art tan"><div class="dripper"></div></div>
+}
+else
+{
+    <div class="bean-art @Model.Art.CssClass()">
+        <div class="bag">
+            <div class="bag-label">
+                <div class="o">single origin</div>
+                <div class="n">@nameShort</div>
+                <div class="r">@(Model.Roast ?? "") · @(Model.WeightGrams is null ? "" : Model.WeightGrams + " г")</div>
+            </div>
+        </div>
+    </div>
+}

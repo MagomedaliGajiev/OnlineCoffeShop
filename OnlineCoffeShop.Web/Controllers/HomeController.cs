@@ -7,9 +7,21 @@ namespace OnlineCoffeShop.Web.Controllers;
 
 public class HomeController : Controller
 {
-    public IActionResult Index()
+    public IActionResult Index(string filter = "all", string? roast = null, string? origin = null, string sort = "popular")
     {
-        return View(ProductsRepository.GetAll());
+        var products = ProductsRepository.Query(filter, roast, origin, sort).ToList();
+        var vm = new HomeViewModel
+        {
+            Categories = ProductsRepository.Categories,
+            Products = products,
+            // Favs = _favs.GetIds(),
+            Filter = filter,
+            Roast = roast,
+            Origin = origin,
+            Sort = sort,
+            Hero = ProductsRepository.GetAll()[0],
+        };
+        return View(vm);
     }
 
     public IActionResult Privacy()
