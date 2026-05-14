@@ -1,9 +1,9 @@
 ﻿@* @inject SignInManager<IdentityUser> SignInManager *@
 @* @inject UserManager<IdentityUser> UserManager *@
-@* @inject ICartService Cart *@
+@inject ICartService Cart
 @inject IFavoritesService Favs
 @{
-    // var cartCount = Cart.CountUnits();
+    var cartCount = Cart.CountUnits();
     var favCount = Favs.Count();
     // var isAuth = SignInManager.IsSignedIn(User);
     var route = (ViewContext.RouteData.Values["controller"] as string ?? "home").ToLower();
@@ -59,10 +59,10 @@
                                 <line x1="3" y1="6" x2="21" y2="6" />
                                 <path d="M16 10a4 4 0 0 1-8 0" />
                             </svg>
-                            @* @if (cartCount > 0) *@
-                            @* { *@
-                            @*     <span class="badge">@cartCount</span> *@
-                            @* } *@
+                            @if (cartCount > 0)
+                            {
+                                <span class="badge">@cartCount</span>
+                            }
                         </a>
                     </div>
                 </div>
