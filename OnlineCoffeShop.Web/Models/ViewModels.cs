@@ -11,3 +11,12 @@ public class HomeViewModel
     public string Sort { get; init; } = "popular";
     public Product Hero { get; init; } = null!;
 }
+
+public class ProductDetailsViewModel
+{
+    public Product Product { get; init; } = null!;
+    public bool IsFav { get; init; }
+    public int Qty { get; init; } = 1;
+    public string Grind { get; init; } = "whole";
+    public string Weight { get; init; } = "250";
+}

@@ -4,14 +4,14 @@ namespace OnlineCoffeShop.Web.Repositories;
 
 public static class ProductsRepository
 {
-    private static readonly Guid EthiopiaId  = new("11111111-1111-1111-1111-111111111111");
-    private static readonly Guid ColombiaId  = new("22222222-2222-2222-2222-222222222222");
-    private static readonly Guid GuatemalaId = new("33333333-3333-3333-3333-333333333333");
-    private static readonly Guid BrazilId    = new("44444444-4444-4444-4444-444444444444");
-    private static readonly Guid HarioMiniId = new("55555555-5555-5555-5555-555555555555");
-    private static readonly Guid AeropressId = new("66666666-6666-6666-6666-666666666666");
-    private static readonly Guid HarioV60Id  = new("77777777-7777-7777-7777-777777777777");
-    private static readonly Guid GiftSetId   = new("88888888-8888-8888-8888-888888888888");
+    public static readonly Guid EthiopiaId  = new("11111111-1111-1111-1111-111111111111");
+    public static readonly Guid ColombiaId  = new("22222222-2222-2222-2222-222222222222");
+    public static readonly Guid GuatemalaId = new("33333333-3333-3333-3333-333333333333");
+    public static readonly Guid BrazilId    = new("44444444-4444-4444-4444-444444444444");
+    public static readonly Guid HarioMiniId = new("55555555-5555-5555-5555-555555555555");
+    public static readonly Guid AeropressId = new("66666666-6666-6666-6666-666666666666");
+    public static readonly Guid HarioV60Id  = new("77777777-7777-7777-7777-777777777777");
+    public static readonly Guid GiftSetId   = new("88888888-8888-8888-8888-888888888888");
     
     private static readonly List<Product> _products =
     [

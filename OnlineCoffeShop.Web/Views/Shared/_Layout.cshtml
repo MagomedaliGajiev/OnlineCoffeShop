@@ -1,10 +1,10 @@
 ﻿@* @inject SignInManager<IdentityUser> SignInManager *@
 @* @inject UserManager<IdentityUser> UserManager *@
 @* @inject ICartService Cart *@
-@* @inject IFavoritesService Favs *@
+@inject IFavoritesService Favs
 @{
     // var cartCount = Cart.CountUnits();
-    // var favCount = Favs.Count();
+    var favCount = Favs.Count();
     // var isAuth = SignInManager.IsSignedIn(User);
     var route = (ViewContext.RouteData.Values["controller"] as string ?? "home").ToLower();
     var hideChrome = ViewBag.HideChrome as bool? ?? false;
@@ -42,10 +42,10 @@
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="stroke: rgb(205, 156, 46)">
                                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
                             </svg>
-                            @* @if (favCount > 0) *@
-                            @* { *@
-                            @*     <span class="badge">@favCount</span> *@
-                            @* } *@
+                            @if (favCount > 0)
+                            {
+                                <span class="badge">@favCount</span>
+                            }
                         </a>
                         @* <a class="icon-btn" asp-controller="@(isAuth ? "Profile" : "Account")" asp-action="@(isAuth ? "Index" : "Login")" title="Профиль"> *@
                         @*     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="stroke: rgb(205, 156, 46)"> *@
