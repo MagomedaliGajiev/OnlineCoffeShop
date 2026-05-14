@@ -1,0 +1,107 @@
+﻿@model CartViewModel
+@{
+    ViewData["Title"] = "Корзина";
+    var ru = new System.Globalization.CultureInfo("ru-RU");
+    string CountWord(int n) => n == 1 ? "товар" : (n < 5 ? "товара" : "товаров");
+}
+@if (Model.Lines.Count == 0)
+{
+    <div class="screen shell cart-empty">
+        <div class="cart-empty-mark">пусто</div>
+        <h1 class="h-display cart-empty-title">Корзина пуста</h1>
+        <p class="muted cart-empty-desc">Загляните в каталог — там 115 моносортов ждут.</p>
+        <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Открыть каталог →</a>
+    </div>
+}
+else
+{
+    <div class="screen shell" style="padding-top:40px;padding-bottom:60px">
+        <h1 class="h-display h-page">Корзина</h1>
+        <p class="muted" style="margin-bottom:32px">@Model.Lines.Count @CountWord(Model.Lines.Count) на сумму @Model.Subtotal.ToString("N0", ru) ₽</p>
+
+        <div class="cart-layout">
+            <div class="cart-lines">
+                @foreach (var line in Model.Lines)
+                {
+                    var p = line.Product;
+                    <div class="cart-line">
+                        <div class="cart-line-thumb">
+                            <partial name="_ProductArt" model="p" />
+                        </div>
+                        <div>
+                            <div class="cart-line-name">@p.Name</div>
+                            <div class="cart-line-meta">
+                                @p.Type@(p.WeightGrams is null ? "" : " · " + p.WeightGrams + " г")@(p.Roast is null ? "" : " · " + p.Roast.ToLower() + " обжарка")
+                            </div>
+                            <div class="qty-stepper">
+                                <form method="post" asp-controller="Cart" asp-action="SetQty" style="display:contents">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@p.Id" />
+                                    <input type="hidden" name="qty" value="@(line.Qty - 1)" />
+                                    <button type="submit" aria-label="Уменьшить">−</button>
+                                </form>
+                                <span class="qty">@line.Qty</span>
+                                <form method="post" asp-controller="Cart" asp-action="SetQty" style="display:contents">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@p.Id" />
+                                    <input type="hidden" name="qty" value="@(line.Qty + 1)" />
+                                    <button type="submit" aria-label="Увеличить">+</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="cart-line-totals">
+                            <div class="cart-line-total">@line.LineTotal.ToString("N0", ru) ₽</div>
+                            <div class="cart-line-unit">@p.Price.ToString("N0", ru) ₽ × @line.Qty</div>
+                            <form method="post" asp-controller="Cart" asp-action="Remove" style="display:inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@p.Id" />
+                                <button type="submit" class="cart-line-remove">✕ Удалить</button>
+                            </form>
+                        </div>
+                    </div>
+                }
+                <a asp-controller="Home" asp-action="Index" class="btn btn-ghost" style="margin-top:8px;width:fit-content">← Продолжить покупки</a>
+            </div>
+
+            <aside class="panel-dark">
+                <div class="panel-dark-title">Ваш заказ</div>
+                <div class="summary-rows">
+                    <div class="summary-row"><span>Товары (@Model.Lines.Sum(l => l.Qty) шт.)</span><span>@Model.Subtotal.ToString("N0", ru) ₽</span></div>
+                    @if (Model.Discount > 0)
+                    {
+                        <div class="summary-row discount"><span>Скидка</span><span>−@Model.Discount.ToString("N0", ru) ₽</span></div>
+                    }
+                    <div class="summary-row @(Model.Shipping == 0 ? "free" : "")"><span>Доставка</span><span>@(Model.Shipping == 0 ? "бесплатно" : Model.Shipping + " ₽")</span></div>
+                </div>
+
+                <form method="post" asp-controller="Cart" asp-action="ApplyPromo" class="summary-promo">
+                    @Html.AntiForgeryToken()
+                    <input class="field" name="promo" placeholder="Промокод" value="@Model.Promo" />
+                    <button type="submit" class="btn btn-ochre btn-sm">@(Model.PromoApplied ? "✓" : "Применить")</button>
+                </form>
+                @if (Model.PromoApplied)
+                {
+                    <div class="promo-ok">✓ Промокод применён — скидка 200 ₽</div>
+                }
+
+                <div class="divider-dark"></div>
+                <div class="summary-total">
+                    <span class="summary-total-label">Итого:</span>
+                    <span class="summary-total-value">@Model.Total.ToString("N0", ru) ₽</span>
+                </div>
+
+                @if (Model.IsAuthenticated)
+                {
+                    <a asp-controller="Checkout" asp-action="Index" class="btn btn-cta btn-block btn-xl">Оформить заказ →</a>
+                }
+                else
+                {
+                    <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Url.Action("Index","Checkout")" class="btn btn-cta btn-block btn-xl">Оформить заказ →</a>
+                }
+                <div class="summary-hint">
+                    Безопасная оплата · возврат 14 дней<br />Apple Pay · Google Pay · СБП · карта
+                </div>
+            </aside>
+        </div>
+    </div>
+}

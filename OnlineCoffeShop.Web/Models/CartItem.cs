@@ -9,7 +9,7 @@ public class CartItem
 
 public class CartLine
 {
-    private Product Product { get; init; } = null!;
+    public Product Product { get; init; } = null!;
     
     public  int Qty { get; init; }
     
