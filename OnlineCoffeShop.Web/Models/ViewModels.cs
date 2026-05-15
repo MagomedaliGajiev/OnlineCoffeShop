@@ -20,3 +20,15 @@ public class ProductDetailsViewModel
     public string Grind { get; init; } = "whole";
     public string Weight { get; init; } = "250";
 }
+
+public class CartViewModel
+{
+    public IReadOnlyList<CartLine> Lines { get; init; } = Array.Empty<CartLine>();
+    public decimal Subtotal { get; init; }
+    public decimal Discount { get; init; }
+    public decimal Shipping { get; init; }
+    public decimal Total { get; init; }
+    public bool PromoApplied { get; init; }
+    public string? Promo { get; init; }
+    public bool IsAuthenticated { get; init; }
+}
