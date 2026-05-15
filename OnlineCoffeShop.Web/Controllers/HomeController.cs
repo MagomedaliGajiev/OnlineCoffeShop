@@ -1,16 +1,16 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using OnlineCoffeShop.Web.Models;
-using OnlineCoffeShop.Web.Service.Abstractions;
+using OnlineCoffeShop.Web.Repositories.Abstractions;
 
 namespace OnlineCoffeShop.Web.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly IProductService _product;
-    private readonly IFavoritesService _favs;
+    private readonly IProductRepository _product;
+    private readonly IFavoritesRepository _favs;
 
-    public HomeController(IProductService product, IFavoritesService favs)
+    public HomeController(IProductRepository product, IFavoritesRepository favs)
     {
         _product = product;
         _favs = favs;

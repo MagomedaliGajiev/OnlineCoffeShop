@@ -1,8 +1,8 @@
 ﻿using OnlineCoffeShop.Web.Models;
 
-namespace OnlineCoffeShop.Web.Service.Abstractions;
+namespace OnlineCoffeShop.Web.Repositories.Abstractions;
 
-public interface ICartService
+public interface ICartRepository
 {
     List<CartItem> GetItems();
     
@@ -23,6 +23,8 @@ public interface ICartService
     string? Promo { get; }
     
     bool PromoApplied { get; }
-    
+
+    decimal PromoDiscount { get; }
+
     void ApplyPromo(string? code);
 }

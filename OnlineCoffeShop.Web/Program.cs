@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using OnlineCoffeShop.Web.Data;
-using OnlineCoffeShop.Web.Service;
-using OnlineCoffeShop.Web.Service.Abstractions;
+using OnlineCoffeShop.Web.Repositories;
+using OnlineCoffeShop.Web.Repositories.Abstractions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,9 +13,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<IFavoritesService, FavoritesService>();
-builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IProductRepository, InMemoryProductRepository>();
+builder.Services.AddScoped<IFavoritesRepository, SessionFavoritesRepository>();
+builder.Services.AddScoped<ICartRepository, DbCartRepository>();
 
 var app = builder.Build();
 
