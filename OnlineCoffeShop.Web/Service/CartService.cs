@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using OnlineCoffeShop.Web.Data;
 using OnlineCoffeShop.Web.Models;
 using OnlineCoffeShop.Web.Repositories;
 using OnlineCoffeShop.Web.Service.Abstractions;
@@ -7,14 +8,16 @@ namespace OnlineCoffeShop.Web.Service;
 
 public class CartService : ICartService
 {
-    private const string CartKey = "cart";
+    private const string SessionAnchorKey = "cart_anchor";
     private const string PromoKey = "promo";
     private const decimal PromoDiscount = 200m;
 
+    private readonly AppDbContext _db;
     private readonly IHttpContextAccessor _http;
 
-    public CartService(IHttpContextAccessor http)
+    public CartService(AppDbContext db, IHttpContextAccessor http)
     {
+        _db = db;
         _http = http;
     }
 
@@ -22,19 +25,13 @@ public class CartService : ICartService
 
     public List<CartItem> GetItems()
     {
-        var json = Session.GetString(CartKey);
-        if (string.IsNullOrEmpty(json))
+        var cart = GetOrCreateCart(out var created);
+        if (created)
         {
-            var seed = new List<CartItem>
-            {
-                new() { ProductId = ProductsRepository.EthiopiaId,  Qty = 2 },
-                new() { ProductId = ProductsRepository.ColombiaId,  Qty = 1 },
-                new() { ProductId = ProductsRepository.HarioMiniId, Qty = 1 }
-            };
-            Save(seed);
-            return seed;
+            SeedInitialItems(cart);
+            _db.SaveChanges();
         }
-        return JsonSerializer.Deserialize<List<CartItem>>(json) ?? new();
+        return cart.Items.ToList();
     }
 
     public List<CartLine> GetLines()
@@ -47,38 +44,62 @@ public class CartService : ICartService
     }
 
     public int CountUnits() => GetItems().Sum(i => i.Qty);
+
     public decimal Subtotal() => GetLines().Sum(l => l.LineTotal);
 
     public void Add(Guid productId, int qty = 1)
     {
-        var items = GetItems();
-        var ex = items.FirstOrDefault(i => i.ProductId == productId);
-        if (ex is null) items.Add(new CartItem { ProductId = productId, Qty = qty });
-        else ex.Qty += qty;
-        Save(items);
+        var cart = GetOrCreateCart(out _);
+        var ex = cart.Items.FirstOrDefault(i => i.ProductId == productId);
+        if (ex is null)
+        {
+            cart.Items.Add(new CartItem { ProductId = productId, Qty = qty });
+        }
+        else
+        {
+            ex.Qty += qty;
+        }
+        Touch(cart);
+        _db.SaveChanges();
     }
 
     public void Remove(Guid productId)
     {
-        var items = GetItems().Where(i => i.ProductId != productId).ToList();
-        Save(items);
+        var cart = GetOrCreateCart(out _);
+        var ex = cart.Items.FirstOrDefault(i => i.ProductId == productId);
+        if (ex is null) return;
+
+        cart.Items.Remove(ex);
+        _db.CartItems.Remove(ex);
+        Touch(cart);
+        _db.SaveChanges();
     }
 
     public void SetQty(Guid productId, int qty)
     {
         if (qty < 1) { Remove(productId); return; }
-        var items = GetItems();
-        var ex = items.FirstOrDefault(i => i.ProductId == productId);
-        if (ex is not null) { ex.Qty = qty; Save(items); }
+
+        var cart = GetOrCreateCart(out _);
+        var ex = cart.Items.FirstOrDefault(i => i.ProductId == productId);
+        if (ex is null) return;
+
+        ex.Qty = qty;
+        Touch(cart);
+        _db.SaveChanges();
     }
 
     public void Clear()
     {
-        Save(new List<CartItem>());
+        var cart = GetOrCreateCart(out _);
+        _db.CartItems.RemoveRange(cart.Items);
+        cart.Items.Clear();
+        Touch(cart);
+        _db.SaveChanges();
         Session.Remove(PromoKey);
     }
 
     public string? Promo => Session.GetString(PromoKey);
+
     public bool PromoApplied => !string.IsNullOrEmpty(Promo);
 
     public void ApplyPromo(string? code)
@@ -87,8 +108,51 @@ public class CartService : ICartService
         else Session.SetString(PromoKey, code.Trim());
     }
 
-    private void Save(List<CartItem> items)
-        => Session.SetString(CartKey, JsonSerializer.Serialize(items));
-
     public static decimal PromoDiscountValue => PromoDiscount;
+
+    private Cart GetOrCreateCart(out bool created)
+    {
+        var sessionId = EnsureSessionId();
+
+        var cart = _db.Carts
+            .Include(c => c.Items)
+            .FirstOrDefault(c => c.SessionId == sessionId);
+
+        if (cart is not null)
+        {
+            created = false;
+            return cart;
+        }
+
+        cart = new Cart
+        {
+            Id = Guid.NewGuid(),
+            SessionId = sessionId,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
+        _db.Carts.Add(cart);
+        created = true;
+        return cart;
+    }
+
+    private Guid EnsureSessionId()
+    {
+        if (Guid.TryParse(Session.GetString(SessionAnchorKey), out var existing))
+        {
+            return existing;
+        }
+        var fresh = Guid.NewGuid();
+        Session.SetString(SessionAnchorKey, fresh.ToString());
+        return fresh;
+    }
+
+    private static void SeedInitialItems(Cart cart)
+    {
+        cart.Items.Add(new CartItem { ProductId = ProductsRepository.EthiopiaId,  Qty = 2 });
+        cart.Items.Add(new CartItem { ProductId = ProductsRepository.ColombiaId,  Qty = 1 });
+        cart.Items.Add(new CartItem { ProductId = ProductsRepository.HarioMiniId, Qty = 1 });
+    }
+
+    private static void Touch(Cart cart) => cart.UpdatedAt = DateTime.UtcNow;
 }
