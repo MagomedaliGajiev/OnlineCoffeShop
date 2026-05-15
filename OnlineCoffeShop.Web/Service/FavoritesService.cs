@@ -1,5 +1,5 @@
 ﻿using System.Text.Json;
-using OnlineCoffeShop.Web.Repositories;
+using OnlineCoffeShop.Web.Models;
 using OnlineCoffeShop.Web.Service.Abstractions;
 
 namespace OnlineCoffeShop.Web.Service;
@@ -18,7 +18,7 @@ public class FavoritesService : IFavoritesService
         var json = Session.GetString(Key);
         if (string.IsNullOrEmpty(json))
         {
-            var seed = new HashSet<Guid> { ProductsRepository.EthiopiaId, ProductsRepository.AeropressId };
+            var seed = new HashSet<Guid> { ProductIds.Ethiopia, ProductIds.Aeropress };
             Save(seed);
             return seed;
         }

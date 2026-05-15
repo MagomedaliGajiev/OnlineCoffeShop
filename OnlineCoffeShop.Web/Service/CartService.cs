@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using OnlineCoffeShop.Web.Data;
 using OnlineCoffeShop.Web.Models;
-using OnlineCoffeShop.Web.Repositories;
 using OnlineCoffeShop.Web.Service.Abstractions;
 
 namespace OnlineCoffeShop.Web.Service;
@@ -14,11 +13,13 @@ public class CartService : ICartService
 
     private readonly AppDbContext _db;
     private readonly IHttpContextAccessor _http;
+    private readonly IProductService _product;
 
-    public CartService(AppDbContext db, IHttpContextAccessor http)
+    public CartService(AppDbContext db, IHttpContextAccessor http, IProductService product)
     {
         _db = db;
         _http = http;
+        _product = product;
     }
 
     private ISession Session => _http.HttpContext!.Session;
@@ -37,7 +38,7 @@ public class CartService : ICartService
     public List<CartLine> GetLines()
     {
         return GetItems()
-            .Select(i => new { i, p = ProductsRepository.TryGetById(i.ProductId) })
+            .Select(i => new { i, p = _product.Find(i.ProductId) })
             .Where(x => x.p is not null)
             .Select(x => new CartLine { Product = x.p!, Qty = x.i.Qty })
             .ToList();
@@ -149,9 +150,9 @@ public class CartService : ICartService
 
     private static void SeedInitialItems(Cart cart)
     {
-        cart.Items.Add(new CartItem { ProductId = ProductsRepository.EthiopiaId,  Qty = 2 });
-        cart.Items.Add(new CartItem { ProductId = ProductsRepository.ColombiaId,  Qty = 1 });
-        cart.Items.Add(new CartItem { ProductId = ProductsRepository.HarioMiniId, Qty = 1 });
+        cart.Items.Add(new CartItem { ProductId = ProductIds.Ethiopia,  Qty = 2 });
+        cart.Items.Add(new CartItem { ProductId = ProductIds.Colombia,  Qty = 1 });
+        cart.Items.Add(new CartItem { ProductId = ProductIds.HarioMini, Qty = 1 });
     }
 
     private static void Touch(Cart cart) => cart.UpdatedAt = DateTime.UtcNow;
