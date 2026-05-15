@@ -18,6 +18,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Cart>(e =>
         {
             e.HasKey(c => c.Id);
+            e.Property(c => c.UserId).HasMaxLength(450);
             e.HasIndex(c => c.UserId);
             e.HasIndex(c => c.SessionId);
 
