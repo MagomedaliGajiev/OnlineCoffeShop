@@ -57,7 +57,7 @@
         </div>
     </div>
 
-    @if (o.Items.Count > 0 && !string.IsNullOrEmpty(o.Items[0].Name))
+    @if (o.Items.Count > 0)
     {
         <div style="background:white;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:28px;text-align:left">
             <div class="muted" style="font-size:12px;font-weight:700;margin-bottom:12px;letter-spacing:0.04em;text-transform:uppercase">В вашем заказе</div>
@@ -66,7 +66,7 @@
                 {
                     <div style="display:flex;align-items:center;gap:12px">
                         <div style="width:36px;height:36px;border-radius:8px;overflow:hidden">
-                            <div class="bean-art @it.Art" style="width:100%;height:100%"><div style="width:60%;height:50%;background:rgba(0,0,0,0.2);border-radius:50%"></div></div>
+                            <div class="bean-art @it.Art.CssClass()" style="width:100%;height:100%"><div style="width:60%;height:50%;background:rgba(0,0,0,0.2);border-radius:50%"></div></div>
                         </div>
                         <div style="flex:1;font-size:13.5px">@it.Name <span class="muted">× @it.Qty</span></div>
                         <div style="font-weight:700;font-size:13.5px">@((it.Price * it.Qty).ToString("N0", ru)) ₽</div>

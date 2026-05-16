@@ -35,7 +35,7 @@ public class SuccessController : Controller
         {
             Order = order,
             UserName = "Магомедали",
-            UserEmail = string.Empty,
+            UserEmail = "mag198421@gmail.com",
         };
 
         return View(vm);
