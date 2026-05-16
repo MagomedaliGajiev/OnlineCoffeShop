@@ -87,3 +87,12 @@ public class CheckoutViewModel
 
     public string Payment { get; set; } = "card";
 }
+
+public class SuccessViewModel
+{
+    public Order Order { get; init; } = null!;
+
+    public string UserName { get; init; } = "Магомедали";
+
+    public string UserEmail { get; init; } = string.Empty;
+}
