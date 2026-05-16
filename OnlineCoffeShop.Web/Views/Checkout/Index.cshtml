@@ -1,0 +1,135 @@
+﻿@model CheckoutViewModel
+@{
+    ViewData["Title"] = "Оформление";
+    var ru = new System.Globalization.CultureInfo("ru-RU");
+}
+<div class="screen shell" style="padding-top:32px;padding-bottom:60px">
+    <a asp-controller="Cart" asp-action="Index" class="btn btn-ghost btn-sm" style="margin-bottom:12px">← К корзине</a>
+
+    <div class="stepper">
+        <div class="node done"><div class="dot">✓</div><div class="label">Корзина</div></div>
+        <div class="line done"></div>
+        <div class="node curr"><div class="dot">2</div><div class="label">Оформление</div></div>
+        <div class="line"></div>
+        <div class="node"><div class="dot">3</div><div class="label">Оплата</div></div>
+        <div class="line"></div>
+        <div class="node"><div class="dot">4</div><div class="label">Готово</div></div>
+    </div>
+
+    <form method="post" asp-controller="Checkout" asp-action="Place">
+        @Html.AntiForgeryToken()
+        <div style="display:grid;grid-template-columns:1fr 380px;gap:32px;align-items:start">
+            <div>
+                <div style="margin-bottom:32px">
+                    <h3 class="h-display" style="font-size:17px;margin:0 0 14px">1. Контактные данные</h3>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                        <div><label class="field-label">Имя</label><input class="field" asp-for="FirstName" /></div>
+                        <div><label class="field-label">Фамилия</label><input class="field" asp-for="LastName" /></div>
+                        <div><label class="field-label">Телефон</label><input class="field" asp-for="Phone" /></div>
+                        <div><label class="field-label">Email</label><input class="field" asp-for="Email" /></div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:32px">
+                    <h3 class="h-display" style="font-size:17px;margin:0 0 14px">2. Способ доставки</h3>
+                    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px" id="delivery-row">
+                        @foreach (var (id, title, sub, price, priceGood, glyph) in new[]
+                        {
+                            ("courier", "Курьер", "Москва, завтра 10–22", Model.Subtotal >= 2000 ? "Бесплатно от 2 000 ₽" : "290 ₽", Model.Subtotal >= 2000, "→"),
+                            ("pickup",  "Самовывоз", "Шоурум на Покровке", "Сегодня · 0 ₽", true, "◇"),
+                            ("cdek",    "СДЭК", "По России, 2–4 дня", "от 290 ₽", false, "≋")
+                        })
+                        {
+                            var active = Model.Delivery == id;
+                            <label style="text-align:left;padding:18px;background:@(active ? "var(--bg-sand)" : "white");border:@(active ? "2px solid var(--ink)" : "1px solid var(--line)");border-radius:12px;cursor:pointer;display:grid;gap:6px">
+                                <input type="radio" name="Delivery" value="@id" style="display:none" checked="@active" />
+                                <div style="width:32px;height:32px;border-radius:8px;background:@(active ? "var(--ink)" : "var(--bg-sand)");color:@(active ? "var(--ochre)" : "var(--ink)");display:grid;place-items:center;font-family:var(--font-serif);font-style:italic;font-size:16px;font-weight:600">@glyph</div>
+                                <div style="font-weight:800;font-size:14px;margin-top:4px">@title</div>
+                                <div class="muted" style="font-size:12px">@sub</div>
+                                <div style="font-weight:700;font-size:13px;color:@(priceGood ? "var(--emerald)" : "var(--ink)");margin-top:4px">@price</div>
+                            </label>
+                        }
+                    </div>
+                </div>
+
+                <div style="margin-bottom:32px">
+                    <h3 class="h-display" style="font-size:17px;margin:0 0 14px">3. Адрес доставки</h3>
+                    <div style="display:grid;gap:12px">
+                        <div><label class="field-label">Город</label><input class="field" asp-for="City" /></div>
+                        <div><label class="field-label">Улица, дом</label><input class="field" asp-for="Address" /></div>
+                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+                            <div><label class="field-label">Квартира</label><input class="field" asp-for="Apt" /></div>
+                            <div><label class="field-label">Подъезд</label><input class="field" asp-for="Entrance" /></div>
+                            <div><label class="field-label">Этаж</label><input class="field" asp-for="Floor" /></div>
+                        </div>
+                        <div>
+                            <label class="field-label">Комментарий курьеру</label>
+                            <textarea class="field" asp-for="Comment" style="height:84px;padding-top:12px;resize:vertical" placeholder="Например: позвонить за 15 минут до доставки"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:32px">
+                    <h3 class="h-display" style="font-size:17px;margin:0 0 14px">4. Оплата</h3>
+                    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
+                        @foreach (var (id, title, sub) in new[]
+                        {
+                            ("card",   "Картой онлайн", "Visa · MC · МИР"),
+                            ("sbp",    "СБП", "Перевод по QR"),
+                            ("apple",  "Apple Pay", "Touch / Face ID"),
+                            ("google", "Google Pay", "Привязанные карты")
+                        })
+                        {
+                            var active = Model.Payment == id;
+                            <label style="text-align:left;padding:16px;background:@(active ? "var(--bg-sand)" : "white");border:@(active ? "2px solid var(--ink)" : "1px solid var(--line)");border-radius:12px;cursor:pointer;display:block">
+                                <input type="radio" name="Payment" value="@id" style="display:none" checked="@active" />
+                                <div style="display:flex;align-items:center;gap:10px">
+                                    <span style="width:16px;height:16px;border-radius:999px;border:2px solid @(active ? "var(--ink)" : "var(--line)");background:@(active ? "radial-gradient(circle, var(--ink) 0 35%, transparent 40%)" : "white")"></span>
+                                    <div style="font-weight:700;font-size:14px">@title</div>
+                                </div>
+                                <div class="muted" style="font-size:12px;margin-top:6px;margin-left:26px">@sub</div>
+                            </label>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <aside style="background:var(--ink);color:#f6ecd6;border-radius:16px;padding:26px;position:sticky;top:24px">
+                <div style="font-size:16px;font-weight:700;color:var(--ochre);margin-bottom:18px">Ваш заказ</div>
+                <div style="display:grid;gap:14px;margin-bottom:18px">
+                    @foreach (var line in Model.Lines)
+                    {
+                        <div style="display:flex;gap:12px;align-items:center">
+                            <div style="width:42px;height:42px;border-radius:8px;overflow:hidden;flex-shrink:0">
+                                <partial name="_ProductArt" model="line.Product" />
+                            </div>
+                            <div style="flex:1;font-size:12.5px;line-height:1.4">
+                                <div style="color:#f6ecd6">@line.Product.Name</div>
+                                <div style="color:#bba089">× @line.Qty</div>
+                            </div>
+                            <div style="font-size:13px;font-weight:600">@line.LineTotal.ToString("N0", ru) ₽</div>
+                        </div>
+                    }
+                </div>
+                <div style="height:1px;background:#5a3a22;margin:14px 0"></div>
+                <div style="display:grid;gap:10px;font-size:13px">
+                    <div style="display:flex;justify-content:space-between"><span style="color:#bba089">Подытог</span><span style="color:white;font-weight:600">@Model.Subtotal.ToString("N0", ru) ₽</span></div>
+                    @if (Model.Discount > 0)
+                    {
+                        <div style="display:flex;justify-content:space-between"><span style="color:#bba089">Скидка</span><span style="color:var(--emerald);font-weight:600">−@Model.Discount.ToString("N0", ru) ₽</span></div>
+                    }
+                    <div style="display:flex;justify-content:space-between"><span style="color:#bba089">Доставка</span><span style="color:@(Model.Shipping == 0 ? "var(--emerald)" : "white");font-weight:600">@(Model.Shipping == 0 ? "бесплатно" : Model.Shipping + " ₽")</span></div>
+                </div>
+                <div style="height:1px;background:#5a3a22;margin:16px 0"></div>
+                <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:18px">
+                    <span style="font-size:14px;color:white">Итого:</span>
+                    <span style="font-size:26px;font-weight:800;color:var(--ochre)">@Model.Total.ToString("N0", ru) ₽</span>
+                </div>
+                <button type="submit" class="btn btn-cta btn-block" style="height:50px">Подтвердить и оплатить →</button>
+                <div style="font-size:11px;color:#bba089;text-align:center;margin-top:12px;line-height:1.5">
+                    Нажимая кнопку, вы соглашаетесь с условиями оферты
+                </div>
+            </aside>
+        </div>
+    </form>
+</div>

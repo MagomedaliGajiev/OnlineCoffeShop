@@ -13,11 +13,11 @@ public static class ArtStyleExtensions
 {
     public static string CssClass(this ArtStyle a) => a switch
     {
-        ArtStyle.Dark   => "dark",
+        ArtStyle.Dark => "dark",
         ArtStyle.Medium => "med",
-        ArtStyle.Tan    => "tan",
-        ArtStyle.Gear   => "gear",
-        ArtStyle.Gift   => "gift",
-        _ => "dark"
+        ArtStyle.Tan => "tan",
+        ArtStyle.Gear => "gear",
+        ArtStyle.Gift => "gift",
+        _ => "dark",
     };
 }
