@@ -90,7 +90,7 @@ else
                     <span class="summary-total-value">@Model.Total.ToString("N0", ru) ₽</span>
                 </div>
 
-                @if (Model.IsAuthenticated)
+                @if (!Model.IsAuthenticated)
                 {
                     <a asp-controller="Checkout" asp-action="Index" class="btn btn-cta btn-block btn-xl">Оформить заказ →</a>
                 }

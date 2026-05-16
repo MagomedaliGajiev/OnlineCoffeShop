@@ -16,6 +16,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IProductRepository, InMemoryProductRepository>();
 builder.Services.AddScoped<IFavoritesRepository, SessionFavoritesRepository>();
 builder.Services.AddScoped<ICartRepository, DbCartRepository>();
+builder.Services.AddScoped<IOrderRepository, InMemoryOrderRepository>();
 
 var app = builder.Build();
 
