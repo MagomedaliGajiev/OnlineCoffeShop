@@ -1,21 +1,21 @@
 using Microsoft.EntityFrameworkCore;
 using OnlineCoffeShop.Web.Data;
 using OnlineCoffeShop.Web.Models;
-using OnlineCoffeShop.Web.Service.Abstractions;
+using OnlineCoffeShop.Web.Repositories.Abstractions;
 
-namespace OnlineCoffeShop.Web.Service;
+namespace OnlineCoffeShop.Web.Repositories;
 
-public class CartService : ICartService
+public class DbCartRepository : ICartRepository
 {
     private const string SessionAnchorKey = "cart_anchor";
     private const string PromoKey = "promo";
-    private const decimal PromoDiscount = 200m;
+    private const decimal PromoDiscountAmount = 200m;
 
     private readonly AppDbContext _db;
     private readonly IHttpContextAccessor _http;
-    private readonly IProductService _product;
+    private readonly IProductRepository _product;
 
-    public CartService(AppDbContext db, IHttpContextAccessor http, IProductService product)
+    public DbCartRepository(AppDbContext db, IHttpContextAccessor http, IProductRepository product)
     {
         _db = db;
         _http = http;
@@ -109,7 +109,7 @@ public class CartService : ICartService
         else Session.SetString(PromoKey, code.Trim());
     }
 
-    public static decimal PromoDiscountValue => PromoDiscount;
+    public decimal PromoDiscount => PromoApplied ? PromoDiscountAmount : 0m;
 
     private Cart GetOrCreateCart(out bool created)
     {

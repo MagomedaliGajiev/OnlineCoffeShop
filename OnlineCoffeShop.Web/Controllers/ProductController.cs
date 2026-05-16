@@ -1,15 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using OnlineCoffeShop.Web.Models;
-using OnlineCoffeShop.Web.Service.Abstractions;
+using OnlineCoffeShop.Web.Repositories.Abstractions;
 
 namespace OnlineCoffeShop.Web.Controllers;
 
 public class ProductController : Controller
 {
-    private readonly IProductService _product;
-    private readonly IFavoritesService _fav;
+    private readonly IProductRepository _product;
+    private readonly IFavoritesRepository _fav;
 
-    public ProductController(IProductService product, IFavoritesService fav)
+    public ProductController(IProductRepository product, IFavoritesRepository fav)
     {
         _product = product;
         _fav = fav;

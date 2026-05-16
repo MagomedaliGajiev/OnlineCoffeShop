@@ -1,6 +1,6 @@
-﻿namespace OnlineCoffeShop.Web.Service.Abstractions;
+﻿namespace OnlineCoffeShop.Web.Repositories.Abstractions;
 
-public interface IFavoritesService
+public interface IFavoritesRepository
 {
     HashSet<Guid> GetIds();
     

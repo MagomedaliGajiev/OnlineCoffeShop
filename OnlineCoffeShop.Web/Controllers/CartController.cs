@@ -1,22 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineCoffeShop.Web.Models;
-using OnlineCoffeShop.Web.Service;
-using OnlineCoffeShop.Web.Service.Abstractions;
+using OnlineCoffeShop.Web.Repositories.Abstractions;
 
 namespace OnlineCoffeShop.Web.Controllers;
 
 public class CartController : Controller
 {
-    private readonly ICartService _cart;
+    private readonly ICartRepository _cart;
 
-    public CartController(ICartService cart) => _cart = cart;
+    public CartController(ICartRepository cart) => _cart = cart;
     
     public IActionResult Index()
     {
         var lines = _cart.GetLines();
         var subtotal = lines.Sum(l => l.LineTotal);
         var itemDiscount = lines.Sum(l => l.Product.OldPrice.HasValue ? (l.Product.OldPrice.Value - l.Product.Price) * l.Qty : 0);
-        var promoDiscount = _cart.PromoApplied ? CartService.PromoDiscountValue : 0;
+        var promoDiscount = _cart.PromoDiscount;
         var shipping = subtotal >= 2000 ? 0 : 290;
         var total = Math.Max(0, subtotal - promoDiscount + shipping);
 

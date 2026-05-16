@@ -1,8 +1,8 @@
 ﻿using OnlineCoffeShop.Web.Models;
 
-namespace OnlineCoffeShop.Web.Service.Abstractions;
+namespace OnlineCoffeShop.Web.Repositories.Abstractions;
 
-public interface IProductService
+public interface IProductRepository
 {
     IReadOnlyList<Product> GetAll { get; }
     

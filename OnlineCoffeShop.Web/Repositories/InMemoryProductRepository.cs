@@ -1,9 +1,9 @@
 ﻿using OnlineCoffeShop.Web.Models;
-using OnlineCoffeShop.Web.Service.Abstractions;
+using OnlineCoffeShop.Web.Repositories.Abstractions;
 
-namespace OnlineCoffeShop.Web.Service;
+namespace OnlineCoffeShop.Web.Repositories;
 
-public class ProductService : IProductService
+public class InMemoryProductRepository : IProductRepository
 {
     private static readonly List<Product> _products = new()
     {

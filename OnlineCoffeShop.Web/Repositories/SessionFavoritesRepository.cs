@@ -1,15 +1,15 @@
 ﻿using System.Text.Json;
 using OnlineCoffeShop.Web.Models;
-using OnlineCoffeShop.Web.Service.Abstractions;
+using OnlineCoffeShop.Web.Repositories.Abstractions;
 
-namespace OnlineCoffeShop.Web.Service;
+namespace OnlineCoffeShop.Web.Repositories;
 
-public class FavoritesService : IFavoritesService
+public class SessionFavoritesRepository : IFavoritesRepository
 {
     private const string Key = "favs";
     private readonly IHttpContextAccessor _http;
-    
-    public FavoritesService(IHttpContextAccessor http) => _http = http;
+
+    public SessionFavoritesRepository(IHttpContextAccessor http) => _http = http;
     
     private ISession Session => _http.HttpContext!.Session;
     
