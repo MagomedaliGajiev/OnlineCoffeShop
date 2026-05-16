@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/Solution items/">
+    <File Path=".editorconfig" />
     <File Path=".gitignore" />
   </Folder>
   <Project Path="OnlineCoffeShop.Web/OnlineCoffeShop.Web.csproj" />

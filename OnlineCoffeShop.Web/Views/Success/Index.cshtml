@@ -1,0 +1,85 @@
+﻿@model SuccessViewModel
+@{
+    ViewData["Title"] = "Заказ оформлен";
+    var ru = new System.Globalization.CultureInfo("ru-RU");
+    var o = Model.Order;
+    var firstName = (Model.UserName ?? "Магомедали").Split(' ')[0];
+    var confetti = Enumerable.Range(0, 28).Select(i => new
+    {
+        Left = (i * 37) % 100,
+        Delay = (i % 6) * 0.08,
+        Color = new[] { "#e9c46a", "#e76f51", "#2a9d8f", "#d4a373" }[i % 4],
+        Rotate = i * 27
+    }).ToArray();
+}
+<style>
+    @@keyframes fall { to { transform: translateY(620px) rotate(720deg); opacity: 0; } }
+    @@keyframes checkPop { from { transform: scale(0); } to { transform: scale(1); } }
+    @@keyframes ringPulse { 0% { transform: scale(1); opacity: .4 } 70% { transform: scale(1.6); opacity: 0 } 100% { opacity: 0 } }
+</style>
+<div class="screen shell" style="padding-top:60px;padding-bottom:80px;max-width:920px;margin:0 auto;text-align:center;position:relative">
+    <div style="position:absolute;inset:0;pointer-events:none;overflow:hidden">
+        @foreach (var c in confetti)
+        {
+            <span style="position:absolute;left:@(c.Left)%;top:-10px;width:9px;height:12px;background:@c.Color;border-radius:2px;animation:fall 1.8s @(c.Delay.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture))s cubic-bezier(.4,.1,.6,1) forwards;transform:rotate(@(c.Rotate)deg)"></span>
+        }
+    </div>
+
+    <div style="position:relative;width:120px;height:120px;margin:0 auto 28px">
+        <span style="position:absolute;inset:0;border-radius:50%;background:var(--emerald);animation:ringPulse 1.4s ease-out infinite"></span>
+        <div style="width:120px;height:120px;border-radius:50%;background:var(--emerald);display:grid;place-items:center;position:relative;animation:checkPop 0.4s cubic-bezier(.2,1.4,.4,1);box-shadow:0 24px 50px -20px rgba(42,157,143,0.5)">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+            </svg>
+        </div>
+    </div>
+
+    <h1 class="h-display" style="font-size:44px;margin:0 0 12px">
+        Спасибо за заказ, <span class="serif" style="font-weight:500;color:var(--ink-2)">@firstName</span>!
+    </h1>
+    <p style="font-size:15px;color:var(--mute);max-width:540px;margin:0 auto 36px;line-height:1.6">
+        Мы уже обжариваем ваш кофе. Письмо с деталями отправлено на <b style="color:var(--ink)">@Model.UserEmail</b>
+    </p>
+
+    <div style="background:var(--bg-sand);border-radius:18px;padding:28px;display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:24px;text-align:left;margin-bottom:28px">
+        <div>
+            <div class="muted" style="font-size:11.5px;margin-bottom:4px">Номер заказа</div>
+            <div style="font-size:22px;font-weight:800;letter-spacing:-0.02em">@o.Number</div>
+        </div>
+        <div>
+            <div class="muted" style="font-size:11.5px;margin-bottom:4px">Сумма</div>
+            <div style="font-size:22px;font-weight:800;letter-spacing:-0.02em">@o.Total.ToString("N0", ru) ₽</div>
+        </div>
+        <div>
+            <div class="muted" style="font-size:11.5px;margin-bottom:4px">Доставка</div>
+            <div style="font-size:15px;font-weight:800">Завтра, 10:00 – 22:00</div>
+            <div class="muted" style="font-size:12px;margin-top:2px">Москва, ул. Покровка, 14</div>
+        </div>
+    </div>
+
+    @if (o.Items.Count > 0)
+    {
+        <div style="background:white;border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:28px;text-align:left">
+            <div class="muted" style="font-size:12px;font-weight:700;margin-bottom:12px;letter-spacing:0.04em;text-transform:uppercase">В вашем заказе</div>
+            <div style="display:grid;gap:10px">
+                @foreach (var it in o.Items)
+                {
+                    <div style="display:flex;align-items:center;gap:12px">
+                        <div style="width:36px;height:36px;border-radius:8px;overflow:hidden">
+                            <div class="bean-art @it.Art.CssClass()" style="width:100%;height:100%"><div style="width:60%;height:50%;background:rgba(0,0,0,0.2);border-radius:50%"></div></div>
+                        </div>
+                        <div style="flex:1;font-size:13.5px">@it.Name <span class="muted">× @it.Qty</span></div>
+                        <div style="font-weight:700;font-size:13.5px">@((it.Price * it.Qty).ToString("N0", ru)) ₽</div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <div style="display:flex;gap:12px;justify-content:center">
+        <a class="btn btn-primary" style="height:48px;padding:0 28px" asp-controller="Profile" asp-action="Index">Отследить заказ →</a>
+        <button class="btn btn-ghost" style="height:48px;padding:0 28px">↓ Скачать чек</button>
+    </div>
+
+    <a asp-controller="Home" asp-action="Index" style="display:block;margin:36px auto 0;font-size:13.5px;color:var(--ink-2);text-decoration:underline">← Вернуться в каталог</a>
+</div>
