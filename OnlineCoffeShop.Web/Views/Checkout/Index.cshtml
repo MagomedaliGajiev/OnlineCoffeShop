@@ -25,8 +25,16 @@
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
                         <div><label class="field-label">Имя</label><input class="field" asp-for="FirstName" /></div>
                         <div><label class="field-label">Фамилия</label><input class="field" asp-for="LastName" /></div>
-                        <div><label class="field-label">Телефон</label><input class="field" asp-for="Phone" /></div>
-                        <div><label class="field-label">Email</label><input class="field" asp-for="Email" /></div>
+                        <div>
+                            <label class="field-label">Телефон</label>
+                            <input class="field" asp-for="Phone"/>
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                        <div>
+                            <label class="field-label">Email</label>
+                            <input class="field" asp-for="Email"/>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
 
@@ -72,17 +80,17 @@
                 <div style="margin-bottom:32px">
                     <h3 class="h-display" style="font-size:17px;margin:0 0 14px">4. Оплата</h3>
                     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
-                        @foreach (var (id, title, sub) in new[]
+                        @foreach (var (method, title, sub) in new[]
                         {
-                            ("card",   "Картой онлайн", "Visa · MC · МИР"),
-                            ("sbp",    "СБП", "Перевод по QR"),
-                            ("apple",  "Apple Pay", "Touch / Face ID"),
-                            ("google", "Google Pay", "Привязанные карты")
+                            (PaymentMethod.CARD_ONLINE, "Картой онлайн", "Visa · MC · МИР"),
+                            (PaymentMethod.SBP,         "СБП", "Перевод по QR"),
+                            (PaymentMethod.APPLE_PAY,   "Apple Pay", "Touch / Face ID"),
+                            (PaymentMethod.GOOGLE_PAY,  "Google Pay", "Привязанные карты")
                         })
                         {
-                            var active = Model.Payment == id;
+                            var active = Model.Payment == method;
                             <label style="text-align:left;padding:16px;background:@(active ? "var(--bg-sand)" : "white");border:@(active ? "2px solid var(--ink)" : "1px solid var(--line)");border-radius:12px;cursor:pointer;display:block">
-                                <input type="radio" name="Payment" value="@id" style="display:none" checked="@active" />
+                                <input type="radio" name="Payment" value="@method" style="display:none" checked="@active" />
                                 <div style="display:flex;align-items:center;gap:10px">
                                     <span style="width:16px;height:16px;border-radius:999px;border:2px solid @(active ? "var(--ink)" : "var(--line)");background:@(active ? "radial-gradient(circle, var(--ink) 0 35%, transparent 40%)" : "white")"></span>
                                     <div style="font-weight:700;font-size:14px">@title</div>
