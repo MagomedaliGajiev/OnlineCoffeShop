@@ -14,7 +14,7 @@ public class Product
 
     public required ProductCategory Category { get; init; }
 
-    public string Type { get; init; } = "";
+    public string Type { get; init; } = string.Empty;
 
     public string? Roast { get; init; }
 
@@ -36,7 +36,7 @@ public class Product
 
     public string[]? Notes { get; init; }
 
-    public string Blurb { get; init; } = "";
+    public string Blurb { get; init; } = string.Empty;
 
     public Dictionary<string, string> Specs { get; init; } = new();
 

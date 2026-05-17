@@ -12,7 +12,8 @@ public class FavController : Controller
         _favs = favs;
     }
 
-    [HttpPost, ValidateAntiForgeryToken]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public IActionResult Toggle(Guid id, string? returnUrl = null)
     {
         _favs.Toggle(id);

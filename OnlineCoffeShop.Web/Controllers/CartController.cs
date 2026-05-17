@@ -28,7 +28,7 @@ public class CartController : Controller
             Total = total,
             PromoApplied = _cart.PromoApplied,
             Promo = _cart.Promo,
-            IsAuthenticated = User.Identity?.IsAuthenticated == true
+            IsAuthenticated = User.Identity?.IsAuthenticated == true,
         };
         return View(vm);
     }

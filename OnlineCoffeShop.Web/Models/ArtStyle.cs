@@ -6,7 +6,7 @@ public enum ArtStyle
     Medium,
     Tan,
     Gear,
-    Gift
+    Gift,
 }
 
 public static class ArtStyleExtensions

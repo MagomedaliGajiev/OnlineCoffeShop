@@ -3,5 +3,5 @@
 public enum ProductTag
 {
     New,
-    Sale
+    Sale,
 }

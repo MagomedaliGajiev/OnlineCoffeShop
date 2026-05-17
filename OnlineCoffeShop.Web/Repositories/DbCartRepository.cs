@@ -32,6 +32,7 @@ public class DbCartRepository : ICartRepository
             SeedInitialItems(cart);
             _db.SaveChanges();
         }
+
         return cart.Items.ToList();
     }
 
@@ -60,6 +61,7 @@ public class DbCartRepository : ICartRepository
         {
             ex.Qty += qty;
         }
+
         Touch(cart);
         _db.SaveChanges();
     }
@@ -130,7 +132,7 @@ public class DbCartRepository : ICartRepository
             Id = Guid.NewGuid(),
             SessionId = sessionId,
             CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            UpdatedAt = DateTime.UtcNow,
         };
         _db.Carts.Add(cart);
         created = true;
@@ -143,6 +145,7 @@ public class DbCartRepository : ICartRepository
         {
             return existing;
         }
+
         var fresh = Guid.NewGuid();
         Session.SetString(SessionAnchorKey, fresh.ToString());
         return fresh;
