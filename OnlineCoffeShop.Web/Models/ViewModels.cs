@@ -32,6 +32,11 @@ public class ProductDetailsViewModel
     public string Weight { get; init; } = "250";
 }
 
+public class FavoritesViewModel
+{
+    public IReadOnlyList<Product> Products { get; init; } = Array.Empty<Product>();
+}
+
 public class CartViewModel
 {
     public IReadOnlyList<CartLine> Lines { get; init; } = Array.Empty<CartLine>();
