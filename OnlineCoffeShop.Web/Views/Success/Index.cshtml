@@ -3,7 +3,8 @@
     ViewData["Title"] = "Заказ оформлен";
     var ru = new System.Globalization.CultureInfo("ru-RU");
     var o = Model.Order;
-    var firstName = (Model.UserName ?? "Магомедали").Split(' ')[0];
+    var firstName = Model.UserName.Split(' ').FirstOrDefault(p => p.Length > 0) ?? "друг";
+    var address = string.Join(", ", new[] { o.City, o.Address }.Where(s => !string.IsNullOrWhiteSpace(s)));
     var confetti = Enumerable.Range(0, 28).Select(i => new
     {
         Left = (i * 37) % 100,
@@ -53,7 +54,7 @@
         <div>
             <div class="muted" style="font-size:11.5px;margin-bottom:4px">Доставка</div>
             <div style="font-size:15px;font-weight:800">Завтра, 10:00 – 22:00</div>
-            <div class="muted" style="font-size:12px;margin-top:2px">Москва, ул. Покровка, 14</div>
+            <div class="muted" style="font-size:12px;margin-top:2px">@(address.Length > 0 ? address : "Адрес уточняется")</div>
         </div>
     </div>
 

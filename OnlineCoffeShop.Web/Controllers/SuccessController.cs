@@ -28,14 +28,18 @@ public class SuccessController : Controller
                 Status = OrderStatus.Pending,
                 Delivery = DeliveryMethod.Courier,
                 Items = new List<OrderItem>(),
+                CustomerName = "Магомедали Гаджиев",
+                Email = "mag198421@gmail.com",
+                City = "Москва",
+                Address = "ул. Покровка, 14",
             };
         }
 
         var vm = new SuccessViewModel
         {
             Order = order,
-            UserName = "Магомедали",
-            UserEmail = "mag198421@gmail.com",
+            UserName = order.CustomerName,
+            UserEmail = order.Email,
         };
 
         return View(vm);

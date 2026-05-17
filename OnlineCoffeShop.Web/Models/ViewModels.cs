@@ -107,7 +107,7 @@ public class SuccessViewModel
 {
     public Order Order { get; init; } = null!;
 
-    public string UserName { get; init; } = "Магомедали";
+    public string UserName { get; init; } = string.Empty;
 
     public string UserEmail { get; init; } = string.Empty;
 }
