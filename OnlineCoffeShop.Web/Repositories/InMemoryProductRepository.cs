@@ -22,8 +22,8 @@ public class InMemoryProductRepository : IProductRepository
                 ["Сорт"] = "Heirloom",
                 ["SCA скоринг"] = "87.5",
                 ["Высота"] = "1900–2100 м",
-                ["Дата обжарки"] = "08.05.2026"
-            }
+                ["Дата обжарки"] = "08.05.2026",
+            },
         },
         new Product
         {
@@ -38,8 +38,8 @@ public class InMemoryProductRepository : IProductRepository
                 ["Регион"] = "Уила, Колумбия",
                 ["Обработка"] = "Мытая",
                 ["Сорт"] = "Caturra",
-                ["SCA скоринг"] = "85.0"
-            }
+                ["SCA скоринг"] = "85.0",
+            },
         },
         new Product
         {
@@ -54,8 +54,8 @@ public class InMemoryProductRepository : IProductRepository
                 ["Регион"] = "Антигуа, Гватемала",
                 ["Обработка"] = "Мытая",
                 ["Сорт"] = "Bourbon",
-                ["SCA скоринг"] = "86.0"
-            }
+                ["SCA скоринг"] = "86.0",
+            },
         },
         new Product
         {
@@ -70,8 +70,8 @@ public class InMemoryProductRepository : IProductRepository
                 ["Регион"] = "Сантос, Бразилия",
                 ["Обработка"] = "Натуральная",
                 ["Сорт"] = "Mundo Novo",
-                ["SCA скоринг"] = "83.5"
-            }
+                ["SCA скоринг"] = "83.5",
+            },
         },
         new Product
         {
@@ -85,8 +85,8 @@ public class InMemoryProductRepository : IProductRepository
                 ["Жернова"] = "Керамические",
                 ["Ёмкость"] = "24 г",
                 ["Регулировка"] = "Ступенчатая",
-                ["Материал"] = "Стекло, нерж. сталь"
-            }
+                ["Материал"] = "Стекло, нерж. сталь",
+            },
         },
         new Product
         {
@@ -99,8 +99,8 @@ public class InMemoryProductRepository : IProductRepository
             {
                 ["Объём"] = "250 мл",
                 ["Материал"] = "Полипропилен",
-                ["Фильтры"] = "350 шт. в комплекте"
-            }
+                ["Фильтры"] = "350 шт. в комплекте",
+            },
         },
         new Product
         {
@@ -113,8 +113,8 @@ public class InMemoryProductRepository : IProductRepository
             {
                 ["Размер"] = "02 (1–4 чашки)",
                 ["Материал"] = "Керамика",
-                ["Цвет"] = "Белый"
-            }
+                ["Цвет"] = "Белый",
+            },
         },
         new Product
         {
@@ -127,9 +127,9 @@ public class InMemoryProductRepository : IProductRepository
             {
                 ["Состав"] = "4 × 100 г",
                 ["Срок годности"] = "12 мес.",
-                ["Упаковка"] = "Подарочная коробка"
-            }
-        }
+                ["Упаковка"] = "Подарочная коробка",
+            },
+        },
     };
 
     private static readonly List<CategorySummary> _categories = Enum.GetValues<ProductCategory>()
@@ -137,14 +137,16 @@ public class InMemoryProductRepository : IProductRepository
         {
             Id = c,
             Name = c.DisplayName(),
-            Count = _products.Count(p => p.Category == c)
+            Count = _products.Count(p => p.Category == c),
         })
         .ToList();
 
     public IReadOnlyList<Product> GetAll => _products;
+
     public IReadOnlyList<CategorySummary> Categories => _categories;
 
     public Product? Find(Guid id) => _products.FirstOrDefault(p => p.Id == id);
+
     public Product? FindBySlug(string slug) => _products.FirstOrDefault(p => p.Slug == slug);
 
     public IEnumerable<Product> Query(string? category, string? roast, string? origin, string? sort)
@@ -160,10 +162,10 @@ public class InMemoryProductRepository : IProductRepository
 
         q = sort switch
         {
-            "price-asc"  => q.OrderBy(p => p.Price),
+            "price-asc" => q.OrderBy(p => p.Price),
             "price-desc" => q.OrderByDescending(p => p.Price),
-            "rating"     => q.OrderByDescending(p => p.AverageRating),
-            _            => q
+            "rating" => q.OrderByDescending(p => p.AverageRating),
+            _ => q,
         };
         return q;
     }

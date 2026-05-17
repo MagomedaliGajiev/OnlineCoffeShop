@@ -15,6 +15,7 @@ public class HomeController : Controller
         _product = product;
         _favs = favs;
     }
+
     public IActionResult Index(string filter = "all", string? roast = null, string? origin = null, string sort = "popular")
     {
         var products = _product.Query(filter, roast, origin, sort).ToList();

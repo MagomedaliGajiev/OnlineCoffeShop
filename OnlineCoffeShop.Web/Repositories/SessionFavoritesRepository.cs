@@ -10,9 +10,9 @@ public class SessionFavoritesRepository : IFavoritesRepository
     private readonly IHttpContextAccessor _http;
 
     public SessionFavoritesRepository(IHttpContextAccessor http) => _http = http;
-    
+
     private ISession Session => _http.HttpContext!.Session;
-    
+
     public HashSet<Guid> GetIds()
     {
         var json = Session.GetString(Key);
@@ -34,9 +34,9 @@ public class SessionFavoritesRepository : IFavoritesRepository
         if (!ids.Add(id)) ids.Remove(id);
         Save(ids);
     }
-    
+
     public int Count() => GetIds().Count;
-    
-    private  void Save(IEnumerable<Guid> ids)
+
+    private void Save(IEnumerable<Guid> ids)
         => Session.SetString(Key, JsonSerializer.Serialize(ids));
 }

@@ -1,0 +1,32 @@
+@model FavoritesViewModel
+@{
+    ViewData["Title"] = "Избранное";
+    string CountWord(int n) => n % 10 == 1 && n % 100 != 11 ? "товар"
+        : n % 10 is >= 2 and <= 4 && n % 100 is < 12 or > 14 ? "товара"
+        : "товаров";
+}
+@if (Model.Products.Count == 0)
+{
+    <div class="screen shell cart-empty">
+        <div class="cart-empty-mark">пусто</div>
+        <h1 class="h-display cart-empty-title">В избранном пока пусто</h1>
+        <p class="muted cart-empty-desc">Отмечайте понравившиеся товары сердечком — они появятся здесь.</p>
+        <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Открыть каталог →</a>
+    </div>
+}
+else
+{
+    <div class="screen shell" style="padding-top:40px;padding-bottom:60px">
+        <h1 class="h-display h-page">Избранное</h1>
+        <p class="muted" style="margin-bottom:32px">@Model.Products.Count @CountWord(Model.Products.Count) в избранном</p>
+
+        <div class="product-grid">
+            @foreach (var p in Model.Products)
+            {
+                <partial name="_ProductCard" model="@(new ProductCardModel { Product = p, IsFav = true, ReturnUrl = Context.Request.Path + Context.Request.QueryString })" />
+            }
+        </div>
+
+        <a asp-controller="Home" asp-action="Index" class="btn btn-ghost" style="margin-top:24px;width:fit-content">← Продолжить покупки</a>
+    </div>
+}

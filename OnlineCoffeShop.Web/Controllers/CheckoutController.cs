@@ -25,7 +25,8 @@ public class CheckoutController : Controller
         return View(vm);
     }
 
-    [HttpPost, ValidateAntiForgeryToken]
+    [HttpPost]
+    [ValidateAntiForgeryToken]
     public async Task<IActionResult> Place(CheckoutViewModel form)
     {
         var lines = _cart.GetLines();
@@ -35,8 +36,8 @@ public class CheckoutController : Controller
         var shipping = form.Delivery switch
         {
             "pickup" => 0m,
-            "cdek"   => 290m,
-            _        => subtotal >= 2000 ? 0m : 290m
+            "cdek" => 290m,
+            _ => subtotal >= 2000 ? 0m : 290m,
         };
         var total = subtotal + shipping;
 
@@ -53,8 +54,8 @@ public class CheckoutController : Controller
         var shipping = delivery switch
         {
             "pickup" => 0m,
-            "cdek"   => 290m,
-            _        => subtotal >= 2000 ? 0m : 290m
+            "cdek" => 290m,
+            _ => subtotal >= 2000 ? 0m : 290m,
         };
         return new CheckoutViewModel
         {
@@ -63,7 +64,7 @@ public class CheckoutController : Controller
             Discount = discount,
             Shipping = shipping,
             Total = subtotal + shipping,
-            Delivery = delivery
+            Delivery = delivery,
         };
     }
 }
