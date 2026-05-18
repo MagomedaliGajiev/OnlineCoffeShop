@@ -12,7 +12,7 @@
 
             <div class="tab-switch">
                 <div class="tab-switch-item active">Войти</div>
-                <a href="#register" class="tab-switch-item">Регистрация</a>
+                <a asp-controller="Account" asp-action="Register" class="tab-switch-item">Регистрация</a>
             </div>
 
             <form asp-controller="Account" asp-action="Login" method="post">
