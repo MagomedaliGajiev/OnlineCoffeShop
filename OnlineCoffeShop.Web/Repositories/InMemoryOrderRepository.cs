@@ -62,7 +62,7 @@ public class InMemoryOrderRepository : IOrderRepository
         }
     }
 
-    public Order Place(string userId, IEnumerable<CartLine> lines, decimal total, string delivery)
+    public Order Place(string userId, IEnumerable<CartLine> lines, decimal total, CheckoutViewModel form)
     {
         lock (_lock)
         {
@@ -83,13 +83,23 @@ public class InMemoryOrderRepository : IOrderRepository
                 PlacedAt = DateTime.Now,
                 Total = total,
                 Status = OrderStatus.Pending,
-                Delivery = delivery switch
+                Delivery = form.Delivery switch
                 {
                     "pickup" => DeliveryMethod.Pickup,
                     "cdek" => DeliveryMethod.Cdek,
                     _ => DeliveryMethod.Courier,
                 },
                 Items = items,
+                CustomerName = $"{form.FirstName} {form.LastName}".Trim(),
+                Phone = form.Phone,
+                Email = form.Email,
+                City = form.City,
+                Address = form.Address,
+                Apt = form.Apt,
+                Entrance = form.Entrance,
+                Floor = form.Floor,
+                Comment = form.Comment,
+                Payment = form.Payment,
             };
 
             _orders.Insert(0, order);

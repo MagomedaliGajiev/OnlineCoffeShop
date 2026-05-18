@@ -1,4 +1,6 @@
-﻿namespace OnlineCoffeShop.Web.Models;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace OnlineCoffeShop.Web.Models;
 
 public class HomeViewModel
 {
@@ -68,36 +70,44 @@ public class CheckoutViewModel
 
     public decimal Total { get; init; }
 
-    public string FirstName { get; set; } = "Магомедали";
+    [Required(ErrorMessage = "Укажите имя")]
+    public string FirstName { get; set; } = string.Empty;
 
-    public string LastName { get; set; } = "Магомедов";
+    [Required(ErrorMessage = "Укажите фамилию")]
+    public string LastName { get; set; } = string.Empty;
 
-    public string Phone { get; set; } = "+7 999 123 45 67";
+    [Required]
+    [Phone(ErrorMessage = "Некорректный телефон")]
+    public string Phone { get; set; } = string.Empty;
 
+    [Required]
+    [EmailAddress(ErrorMessage = "Некорректный email")]
     public string Email { get; set; } = string.Empty;
 
-    public string City { get; set; } = "Москва";
+    [Required(ErrorMessage = "Укажите город")]
+    public string City { get; set; } = string.Empty;
 
-    public string Address { get; set; } = "ул. Покровка, 14";
+    [Required(ErrorMessage = "Укажите адрес")]
+    public string Address { get; set; } = string.Empty;
 
-    public string Apt { get; set; } = "42";
+    public string Apt { get; set; } = string.Empty;
 
-    public string Entrance { get; set; } = "2";
+    public string Entrance { get; set; } = string.Empty;
 
-    public string Floor { get; set; } = "5";
+    public string Floor { get; set; } = string.Empty;
 
     public string? Comment { get; set; }
 
     public string Delivery { get; set; } = "courier";
 
-    public string Payment { get; set; } = "card";
+    public PaymentMethod Payment { get; set; } = PaymentMethod.CARD_ONLINE;
 }
 
 public class SuccessViewModel
 {
     public Order Order { get; init; } = null!;
 
-    public string UserName { get; init; } = "Магомедали";
+    public string UserName { get; init; } = string.Empty;
 
     public string UserEmail { get; init; } = string.Empty;
 }

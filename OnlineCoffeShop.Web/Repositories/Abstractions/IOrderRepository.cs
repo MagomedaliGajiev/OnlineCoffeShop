@@ -8,5 +8,5 @@ public interface IOrderRepository
 
     Order? GetById(Guid id);
 
-    Order Place(string userId, IEnumerable<CartLine> lines, decimal total, string delivery);
+    Order Place(string userId, IEnumerable<CartLine> lines, decimal total, CheckoutViewModel form);
 }

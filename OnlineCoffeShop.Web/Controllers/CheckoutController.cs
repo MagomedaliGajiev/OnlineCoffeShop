@@ -32,6 +32,23 @@ public class CheckoutController : Controller
         var lines = _cart.GetLines();
         if (lines.Count == 0) return RedirectToAction("Index", "Cart");
 
+        if (!ModelState.IsValid)
+        {
+            var invalidVm = BuildVm(lines, form.Delivery);
+            invalidVm.FirstName = form.FirstName;
+            invalidVm.LastName = form.LastName;
+            invalidVm.Phone = form.Phone;
+            invalidVm.Email = form.Email;
+            invalidVm.City = form.City;
+            invalidVm.Address = form.Address;
+            invalidVm.Apt = form.Apt;
+            invalidVm.Entrance = form.Entrance;
+            invalidVm.Floor = form.Floor;
+            invalidVm.Comment = form.Comment;
+            invalidVm.Payment = form.Payment;
+            return View("Index", invalidVm);
+        }
+
         var subtotal = lines.Sum(l => l.LineTotal);
         var shipping = form.Delivery switch
         {
@@ -41,7 +58,7 @@ public class CheckoutController : Controller
         };
         var total = subtotal + shipping;
 
-        var order = _orders.Place("fsddsfs", lines, total, form.Delivery);
+        var order = _orders.Place(string.Empty, lines, total, form);
         _cart.Clear();
 
         return RedirectToAction("Index", "Success", new { id = order.Id });
