@@ -18,7 +18,9 @@ public class ProductController : Controller
     [Route("/product/{slug}")]
     public IActionResult Details(string slug)
     {
-        var product = _product.FindBySlug(slug) ?? _product.GetAll[0];
+        var product = _product.FindBySlug(slug);
+        if (product is null)
+            return NotFound();
 
         var vm = new ProductDetailsViewModel
         {

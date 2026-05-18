@@ -2,7 +2,9 @@
     Layout = "_Layout";
     // имя текущего action — чтобы подсветить активный пункт меню
     var action = (ViewContext.RouteData.Values["action"] as string ?? "").ToLower();
-    string Active(string a) => action == a.ToLower() ? "active" : "";
+    string Active(string a) =>
+        action == a.ToLower() || (a == "Products" && action.StartsWith("product"))
+            ? "active" : "";
 }
 <div class="admin shell">
     <aside class="admin-side">
@@ -18,3 +20,7 @@
         @RenderBody()
     </section>
 </div>
+
+@section Scripts {
+    @await RenderSectionAsync("Scripts", required: false)
+}
