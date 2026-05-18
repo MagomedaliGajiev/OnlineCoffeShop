@@ -1,0 +1,20 @@
+﻿@{
+    Layout = "_Layout";
+    // имя текущего action — чтобы подсветить активный пункт меню
+    var action = (ViewContext.RouteData.Values["action"] as string ?? "").ToLower();
+    string Active(string a) => action == a.ToLower() ? "active" : "";
+}
+<div class="admin shell">
+    <aside class="admin-side">
+        <h3 class="admin-side-title">Администрирование</h3>
+        <nav class="admin-menu">
+            <a class="admin-menu-item @Active("Orders")"   asp-controller="Admin" asp-action="Orders">Заказы</a>
+            <a class="admin-menu-item @Active("Users")"    asp-controller="Admin" asp-action="Users">Пользователи</a>
+            <a class="admin-menu-item @Active("Roles")"    asp-controller="Admin" asp-action="Roles">Роли</a>
+            <a class="admin-menu-item @Active("Products")" asp-controller="Admin" asp-action="Products">Товары</a>
+        </nav>
+    </aside>
+    <section class="admin-content">
+        @RenderBody()
+    </section>
+</div>

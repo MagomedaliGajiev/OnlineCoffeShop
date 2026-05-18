@@ -1626,3 +1626,44 @@ footer.bottombar .legal {
     scroll-behavior: auto !important;
   }
 }
+
+/* ===== Панель администратора ===== */
+.admin {
+    display: grid;
+    grid-template-columns: 240px 1fr;   /* меню слева, контент справа */
+    gap: 24px;
+    padding: 32px 0;
+}
+.admin-side {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    height: fit-content;
+}
+.admin-side-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--mute);
+    margin: 4px 8px 12px;
+}
+.admin-menu { display: flex; flex-direction: column; gap: 4px; }
+.admin-menu-item {
+    display: block;
+    padding: 10px 12px;
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+    text-decoration: none;
+    transition: background var(--t-fast), color var(--t-fast);
+}
+.admin-menu-item:hover { background: var(--bg-sand); }
+.admin-menu-item.active { background: var(--ink); color: var(--cream-text); }
+.admin-content {
+    background: var(--white);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    min-height: 360px;
+}
+.admin-title { font-family: var(--font-serif); font-size: 28px; margin: 0; }
