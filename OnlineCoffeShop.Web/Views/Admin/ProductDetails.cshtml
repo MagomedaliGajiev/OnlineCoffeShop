@@ -1,0 +1,37 @@
+﻿@model Product
+@{
+    ViewData["Title"] = Model.Name;
+    Layout = "_AdminLayout";
+}
+<h1 class="admin-title">@Model.Name</h1>
+
+<dl class="admin-details">
+    <dt>Slug</dt>            <dd>@Model.Slug</dd>
+    <dt>Категория</dt>       <dd>@Model.Category.DisplayName()</dd>
+    <dt>Тип</dt>             <dd>@Model.Type</dd>
+    <dt>Обжарка</dt>         <dd>@(Model.Roast ?? "—")</dd>
+    <dt>Происхождение</dt>   <dd>@(Model.Origin ?? "—")</dd>
+    <dt>Вес, г</dt>          <dd>@(Model.WeightGrams?.ToString() ?? "—")</dd>
+    <dt>Цена</dt>            <dd>@Model.Price.ToString("N0") ₽</dd>
+    <dt>Старая цена</dt>     <dd>@(Model.OldPrice?.ToString("N0") ?? "—")</dd>
+    <dt>Метка</dt>           <dd>@(Model.Tag?.ToString() ?? "—")</dd>
+    <dt>Рейтинг</dt>         <dd>@Model.AverageRating (@Model.ReviewCount отзывов)</dd>
+    <dt>Вкусовые ноты</dt>   <dd>@(Model.Notes is null ? "—" : string.Join(", ", Model.Notes))</dd>
+    <dt>Описание</dt>        <dd>@Model.Blurb</dd>
+</dl>
+
+@if (Model.Specs.Count > 0)
+{
+    <h3>Характеристики</h3>
+    <ul>
+        @foreach (var kv in Model.Specs)
+        {
+            <li><strong>@kv.Key:</strong> @kv.Value</li>
+        }
+    </ul>
+}
+
+<div style="margin-top:24px">
+    <a class="btn" asp-action="ProductEdit" asp-route-id="@Model.Id">Редактировать</a>
+    <a class="btn btn-ghost" asp-action="Products">← К списку</a>
+</div>

@@ -1,0 +1,108 @@
+﻿@model ProductFormViewModel
+@{
+    var isEdit = Model.Id != Guid.Empty;
+    ViewData["Title"] = isEdit ? "Редактирование товара" : "Новый товар";
+    Layout = "_AdminLayout";
+}
+<h1 class="admin-title">@ViewData["Title"]</h1>
+
+<form asp-action="@(isEdit ? "ProductEdit" : "ProductCreate")" method="post" class="admin-form">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="ModelOnly" class="field-error"></div>
+
+    <div class="form-row">
+        <label asp-for="Name" class="field-label">Название</label>
+        <input class="field" asp-for="Name" />
+        <span asp-validation-for="Name" class="field-error"></span>
+    </div>
+
+    <div class="form-row">
+        <label asp-for="Slug" class="field-label">Slug (для адреса страницы)</label>
+        <input class="field" asp-for="Slug" placeholder="ethiopia-yirgacheffe" />
+        <span asp-validation-for="Slug" class="field-error"></span>
+    </div>
+
+    <div class="form-row">
+        <label asp-for="Category" class="field-label">Категория</label>
+        <select class="field" asp-for="Category">
+            @foreach (var c in Enum.GetValues<ProductCategory>())
+            {
+                <option value="@c">@c.DisplayName()</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label asp-for="Type" class="field-label">Тип</label>
+        <input class="field" asp-for="Type" placeholder="Зерновой" />
+    </div>
+
+    <div class="form-row">
+        <label asp-for="Roast" class="field-label">Обжарка</label>
+        <input class="field" asp-for="Roast" placeholder="Светлая / Средняя / Тёмная" />
+    </div>
+
+    <div class="form-row">
+        <label asp-for="Origin" class="field-label">Происхождение</label>
+        <input class="field" asp-for="Origin" placeholder="Эфиопия" />
+    </div>
+
+    <div class="form-row">
+        <label asp-for="WeightGrams" class="field-label">Вес, г</label>
+        <input class="field" asp-for="WeightGrams" type="number" />
+    </div>
+
+    <div class="form-row">
+        <label asp-for="Price" class="field-label">Цена, ₽</label>
+        <input class="field" asp-for="Price" type="number" step="0.01" />
+        <span asp-validation-for="Price" class="field-error"></span>
+    </div>
+
+    <div class="form-row">
+        <label asp-for="OldPrice" class="field-label">Старая цена, ₽ (для скидки)</label>
+        <input class="field" asp-for="OldPrice" type="number" step="0.01" />
+    </div>
+
+    <div class="form-row">
+        <label asp-for="Tag" class="field-label">Метка</label>
+        <select class="field" asp-for="Tag">
+            <option value="">— нет —</option>
+            <option value="New">Новинка</option>
+            <option value="Sale">Скидка</option>
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label asp-for="Art" class="field-label">Стиль карточки</label>
+        <select class="field" asp-for="Art">
+            @foreach (var a in Enum.GetValues<ArtStyle>())
+            {
+                <option value="@a">@a</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-row">
+        <label asp-for="Notes" class="field-label">Вкусовые ноты (через запятую)</label>
+        <input class="field" asp-for="Notes" placeholder="цитрус, жасмин, шоколад" />
+    </div>
+
+    <div class="form-row">
+        <label asp-for="Specs" class="field-label">Характеристики (по строке «Ключ=Значение»)</label>
+        <textarea class="field" asp-for="Specs" rows="4"
+                  placeholder="Регион=Иргачеффе&#10;Обработка=Мытая"></textarea>
+    </div>
+
+    <div class="form-row">
+        <label asp-for="Blurb" class="field-label">Описание</label>
+        <textarea class="field" asp-for="Blurb" rows="4"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-cta">@(isEdit ? "Сохранить" : "Создать")</button>
+    <a class="btn btn-ghost" asp-action="Products">Отмена</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

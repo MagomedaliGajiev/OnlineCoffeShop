@@ -132,18 +132,17 @@ public class InMemoryProductRepository : IProductRepository
         },
     };
 
-    private static readonly List<CategorySummary> _categories = Enum.GetValues<ProductCategory>()
-        .Select(c => new CategorySummary
-        {
-            Id = c,
-            Name = c.DisplayName(),
-            Count = _products.Count(p => p.Category == c),
-        })
-        .ToList();
-
     public IReadOnlyList<Product> GetAll => _products;
 
-    public IReadOnlyList<CategorySummary> Categories => _categories;
+    public IReadOnlyList<CategorySummary> Categories =>
+        Enum.GetValues<ProductCategory>()
+            .Select(c => new CategorySummary
+            {
+                Id = c,
+                Name = c.DisplayName(),
+                Count = _products.Count(p => p.Category == c),
+            })
+            .ToList();
 
     public Product? Find(Guid id) => _products.FirstOrDefault(p => p.Id == id);
 
@@ -169,4 +168,17 @@ public class InMemoryProductRepository : IProductRepository
         };
         return q;
     }
+
+    public void Add(Product product) => _products.Add(product);
+
+    public void Update(Product product)
+    {
+        var index = _products.FindIndex(p => p.Id == product.Id);
+        if (index >= 0)
+        {
+            _products[index] = product;  // Product неизменяем — заменяем объект целиком
+        }
+    }
+
+    public void Delete(Guid id) => _products.RemoveAll(p => p.Id == id);
 }

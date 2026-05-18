@@ -13,4 +13,10 @@ public interface IProductRepository
     Product? FindBySlug(string slug);
 
     IEnumerable<Product> Query(string? category, string? roast, string? origin, string? sort);
+
+    void Add(Product product);
+
+    void Update(Product product);
+
+    void Delete(Guid id);
 }
