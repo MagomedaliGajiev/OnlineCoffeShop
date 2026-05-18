@@ -1,11 +1,8 @@
-﻿@* @inject SignInManager<IdentityUser> SignInManager *@
-@* @inject UserManager<IdentityUser> UserManager *@
-@inject ICartRepository Cart
+﻿@inject ICartRepository Cart
 @inject IFavoritesRepository Favs
 @{
     var cartCount = Cart.CountUnits();
     var favCount = Favs.Count();
-    // var isAuth = SignInManager.IsSignedIn(User);
     var route = (ViewContext.RouteData.Values["controller"] as string ?? "home").ToLower();
     var hideChrome = ViewBag.HideChrome as bool? ?? false;
 }
@@ -47,12 +44,12 @@
                                 <span class="badge">@favCount</span>
                             }
                         </a>
-                        @* <a class="icon-btn" asp-controller="@(isAuth ? "Profile" : "Account")" asp-action="@(isAuth ? "Index" : "Login")" title="Профиль"> *@
-                        @*     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="stroke: rgb(205, 156, 46)"> *@
-                        @*         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /> *@
-                        @*         <circle cx="12" cy="7" r="4" /> *@
-                        @*     </svg> *@
-                        @* </a> *@
+                        <a class="icon-btn" asp-controller="Account" asp-action="Login" title="Профиль">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="stroke: rgb(205, 156, 46)">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                        </a>
                         <a class="icon-btn" asp-controller="Cart" asp-action="Index" title="Корзина">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="stroke: rgb(205, 156, 46)">
                                 <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" />

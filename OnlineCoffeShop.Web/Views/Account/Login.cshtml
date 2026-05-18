@@ -1,0 +1,90 @@
+﻿@model LoginViewModel
+@{
+    ViewData["Title"] = "Вход";
+    ViewBag.HideChrome = true;
+    var returnUrl = ViewData["ReturnUrl"] as string;
+}
+<div class="screen shell auth-screen">
+    <a asp-controller="Home" asp-action="Index" class="btn btn-ghost btn-sm" style="margin-bottom:24px">← На главную</a>
+    <div class="auth-grid">
+        <div class="auth-card">
+            <h2 class="h-display auth-title">Вход</h2>
+
+            <div class="tab-switch">
+                <div class="tab-switch-item active">Войти</div>
+                <a href="#register" class="tab-switch-item">Регистрация</a>
+            </div>
+
+            <form asp-controller="Account" asp-action="Login" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="ReturnUrl" value="@returnUrl" />
+                <div asp-validation-summary="ModelOnly" class="field-error" style="margin-bottom:12px"></div>
+
+                <div class="form-row">
+                    <label class="field-label">Email</label>
+                    <input class="field" asp-for="Email" type="email" placeholder="your@email.com" />
+                    <span asp-validation-for="Email" class="field-error"></span>
+                </div>
+                <div class="form-row-tight">
+                    <label class="field-label">Пароль</label>
+                    <input class="field" asp-for="Password" type="password" placeholder="••••••••" />
+                    <span asp-validation-for="Password" class="field-error"></span>
+                </div>
+                <div class="row-between-tight">
+                    <label class="remember-label">
+                        <input type="checkbox" asp-for="Remember" />
+                        Запомнить меня
+                    </label>
+                    <a class="link-forgot">Забыли пароль?</a>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block btn-lg">Войти</button>
+            </form>
+
+            <div class="divider-text">или войти через</div>
+            <div class="social-row">
+                <button class="btn btn-ghost"><span class="social-dot" style="background:#4285F4"></span>Google</button>
+                <button class="btn btn-ghost"><span class="social-dot" style="background:#0077FF"></span>VK</button>
+                <button class="btn btn-ghost"><span class="social-dot" style="background:#111"></span>Apple</button>
+            </div>
+        </div>
+
+        <div id="register" class="auth-card">
+            <h2 class="h-display auth-title compact">Регистрация</h2>
+            <p class="auth-sub">
+                Первый заказ — скидка 10% и +200 ₽ на бонусный счёт
+            </p>
+            <form asp-controller="Account" asp-action="Register" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="ReturnUrl" value="@returnUrl" />
+                <div class="form-row-tight">
+                    <label class="field-label">Имя</label>
+                    <input class="field" name="Name" placeholder="Как к вам обращаться?" />
+                </div>
+                <div class="form-row-tight">
+                    <label class="field-label">Email</label>
+                    <input class="field" name="Email" type="email" placeholder="your@email.com" />
+                </div>
+                <div class="form-row-wide">
+                    <label class="field-label">Пароль</label>
+                    <input class="field" name="Password" type="password" placeholder="минимум 6 символов" />
+                </div>
+                <label class="terms-label">
+                    <input type="checkbox" name="Agree" value="true" />
+                    <span>Я согласен с <u>условиями использования</u> и <u>политикой конфиденциальности</u></span>
+                </label>
+                <button type="submit" class="btn btn-cta btn-block btn-lg">Создать аккаунт</button>
+            </form>
+
+            <div class="benefits-list">
+                <b>Что вы получите:</b><br />
+                · История всех заказов и быстрый повтор<br />
+                · Бонусные баллы за каждую покупку<br />
+                · Уведомления о новой обжарке любимых сортов
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
