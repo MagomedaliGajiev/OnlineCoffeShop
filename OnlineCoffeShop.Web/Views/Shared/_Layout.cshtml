@@ -30,6 +30,7 @@
                             <a>О нас</a>
                             <a>Доставка</a>
                             <a>Контакты</a>
+                            <a class="@(route == "admin" ? "active" : "")" asp-controller="Admin" asp-action="Index">Панель администратора</a>
                         </nav>
                         <form class="searchbar" method="get" asp-controller="Home" asp-action="Index">
                             <span class="icon">⌕</span>
