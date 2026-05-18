@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Вход";
     ViewBag.HideChrome = true;
-    var returnUrl = ViewData["ReturnUrl"] as string;
+    var returnUrl = Model.ReturnUrl;
 }
 <div class="screen shell auth-screen">
     <a asp-controller="Home" asp-action="Index" class="btn btn-ghost btn-sm" style="margin-bottom:24px">← На главную</a>
@@ -16,18 +16,17 @@
             </div>
 
             <form asp-controller="Account" asp-action="Login" method="post">
-                @Html.AntiForgeryToken()
-                <input type="hidden" asp-for="ReturnUrl" value="@returnUrl" />
+                <input type="hidden" asp-for="ReturnUrl" />
                 <div asp-validation-summary="ModelOnly" class="field-error" style="margin-bottom:12px"></div>
 
                 <div class="form-row">
-                    <label class="field-label">Email</label>
+                    <label asp-for="Email" class="field-label">Email</label>
                     <input class="field" asp-for="Email" type="email" placeholder="your@email.com" />
                     <span asp-validation-for="Email" class="field-error"></span>
                 </div>
                 <div class="form-row-tight">
-                    <label class="field-label">Пароль</label>
-                    <input class="field" asp-for="Password" type="password" placeholder="••••••••" />
+                    <label asp-for="Password" class="field-label">Пароль</label>
+                    <input class="field" asp-for="Password" placeholder="••••••••" />
                     <span asp-validation-for="Password" class="field-error"></span>
                 </div>
                 <div class="row-between-tight">
@@ -42,9 +41,9 @@
 
             <div class="divider-text">или войти через</div>
             <div class="social-row">
-                <button class="btn btn-ghost"><span class="social-dot" style="background:#4285F4"></span>Google</button>
-                <button class="btn btn-ghost"><span class="social-dot" style="background:#0077FF"></span>VK</button>
-                <button class="btn btn-ghost"><span class="social-dot" style="background:#111"></span>Apple</button>
+                <button type="button" class="btn btn-ghost"><span class="social-dot" style="background:#4285F4"></span>Google</button>
+                <button type="button" class="btn btn-ghost"><span class="social-dot" style="background:#0077FF"></span>VK</button>
+                <button type="button" class="btn btn-ghost"><span class="social-dot" style="background:#111"></span>Apple</button>
             </div>
         </div>
 
@@ -54,7 +53,6 @@
                 Первый заказ — скидка 10% и +200 ₽ на бонусный счёт
             </p>
             <form asp-controller="Account" asp-action="Register" method="post">
-                @Html.AntiForgeryToken()
                 <input type="hidden" name="ReturnUrl" value="@returnUrl" />
                 <div class="form-row-tight">
                     <label class="field-label">Имя</label>
