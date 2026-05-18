@@ -1667,3 +1667,22 @@ footer.bottombar .legal {
     min-height: 360px;
 }
 .admin-title { font-family: var(--font-serif); font-size: 28px; margin: 0; }
+
+/* ─────────────── Admin table actions ─────────────── */
+.admin-actions {
+    display: inline-flex;
+    gap: 8px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+.admin-actions form { margin: 0; }
+.btn-danger {
+    background: white;
+    color: var(--terra-dark);
+    border: 1px solid var(--line);
+}
+.btn-danger:hover {
+    background: var(--terra-dark);
+    border-color: var(--terra-dark);
+    color: white;
+}
