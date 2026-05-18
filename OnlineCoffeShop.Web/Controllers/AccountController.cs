@@ -21,4 +21,21 @@ public class AccountController : Controller
         // TODO: логику проверки/входа добавим позже.
         return View(model);
     }
+
+    [HttpGet]
+    public IActionResult Register(string returnUrl = null)
+    {
+        // Открывает пустую форму регистрации.
+        return View(new RegisterViewModel { ReturnUrl = returnUrl });
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult Register(RegisterViewModel model)
+    {
+        // model.Name, model.Email, model.Password, model.Agree
+        // УЖЕ заполнены тем, что пользователь ввёл в форму.
+        // TODO: логику сохранения пользователя добавим позже.
+        return View(model);
+    }
 }

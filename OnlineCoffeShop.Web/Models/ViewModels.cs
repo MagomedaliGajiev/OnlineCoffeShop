@@ -126,3 +126,21 @@ public class LoginViewModel
 
     public string? ReturnUrl { get; set; }
 }
+
+public class RegisterViewModel
+{
+    [Required(ErrorMessage = "Укажите имя")]
+    public string Name { get; set; } = string.Empty;
+
+    [Required]
+    [EmailAddress(ErrorMessage = "Некорректный email")]
+    public string Email { get; set; } = string.Empty;
+
+    [Required]
+    [DataType(DataType.Password)]
+    public string Password { get; set; } = string.Empty;
+
+    public bool Agree { get; set; }
+
+    public string? ReturnUrl { get; set; }
+}

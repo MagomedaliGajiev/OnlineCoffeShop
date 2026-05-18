@@ -1,0 +1,41 @@
+﻿@model RegisterViewModel
+@{
+    ViewData["Title"] = "Регистрация";
+    ViewBag.HideChrome = true;
+}
+<div class="screen shell auth-screen">
+    <a asp-controller="Home" asp-action="Index" class="btn btn-ghost btn-sm" style="margin-bottom:24px">← На главную</a>
+    <div class="auth-card">
+        <h2 class="h-display auth-title">Регистрация нового пользователя</h2>
+
+        <form asp-controller="Account" asp-action="Register" method="post">
+            <input type="hidden" asp-for="ReturnUrl" />
+            <div asp-validation-summary="ModelOnly" class="field-error" style="margin-bottom:12px"></div>
+
+            <div class="form-row">
+                <label asp-for="Name" class="field-label">Имя</label>
+                <input class="field" asp-for="Name" placeholder="Как к вам обращаться?" />
+                <span asp-validation-for="Name" class="field-error"></span>
+            </div>
+            <div class="form-row">
+                <label asp-for="Email" class="field-label">Email</label>
+                <input class="field" asp-for="Email" type="email" placeholder="your@email.com" />
+                <span asp-validation-for="Email" class="field-error"></span>
+            </div>
+            <div class="form-row-tight">
+                <label asp-for="Password" class="field-label">Пароль</label>
+                <input class="field" asp-for="Password" type="password" placeholder="минимум 6 символов" />
+                <span asp-validation-for="Password" class="field-error"></span>
+            </div>
+            <label class="terms-label">
+                <input type="checkbox" asp-for="Agree" />
+                <span>Я согласен с условиями использования</span>
+            </label>
+            <button type="submit" class="btn btn-cta btn-block btn-lg">Создать аккаунт</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

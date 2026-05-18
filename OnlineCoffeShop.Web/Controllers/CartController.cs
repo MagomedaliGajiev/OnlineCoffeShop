@@ -9,7 +9,7 @@ public class CartController : Controller
     private readonly ICartRepository _cart;
 
     public CartController(ICartRepository cart) => _cart = cart;
-    
+
     public IActionResult Index()
     {
         var lines = _cart.GetLines();
@@ -32,7 +32,7 @@ public class CartController : Controller
         };
         return View(vm);
     }
-    
+
     [HttpPost, ValidateAntiForgeryToken]
     public IActionResult Add(Guid id, int qty = 1, string? returnUrl = null)
     {
