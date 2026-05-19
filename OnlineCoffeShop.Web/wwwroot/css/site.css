@@ -1718,7 +1718,9 @@ footer.bottombar .legal {
 
 .compare-table {
     border-collapse: collapse;
+    table-layout: fixed;        /* все колонки одинаковой ширины */
     width: 100%;
+    min-width: 720px;           /* ниже этого .compare-wrap прокручивается */
     background: white;
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
@@ -1737,12 +1739,11 @@ footer.bottombar .legal {
 .compare-label {
     font-size: 13px; font-weight: 700;
     color: var(--mute);
-    white-space: nowrap;
     background: var(--bg-cream);
     position: sticky; left: 0;
-    min-width: 150px;
+    width: 160px;               /* фикс первой колонки — остальное делится поровну */
 }
-.compare-cell { font-size: 14px; font-weight: 600; min-width: 200px; }
+.compare-cell { font-size: 14px; font-weight: 600; }
 
 /* подсветка строк-отличий */
 .compare-table tr.diff td { background: rgba(233, 196, 106, 0.16); }
@@ -1750,7 +1751,7 @@ footer.bottombar .legal {
 
 /* шапка-колонка = мини-карточка товара */
 .compare-col-head { background: var(--bg-cream); }
-.compare-card { display: flex; flex-direction: column; gap: 10px; min-width: 200px; }
+.compare-card { display: flex; flex-direction: column; gap: 10px; }
 .compare-thumb {
     aspect-ratio: 1.05 / 1;
     border-radius: var(--radius-md);
