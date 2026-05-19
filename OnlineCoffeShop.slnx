@@ -2,6 +2,7 @@
   <Folder Name="/Solution items/">
     <File Path=".editorconfig" />
     <File Path=".gitignore" />
+    <File Path="docker-compose.yml" />
   </Folder>
   <Project Path="OnlineCoffeShop.Web/OnlineCoffeShop.Web.csproj" />
 </Solution>

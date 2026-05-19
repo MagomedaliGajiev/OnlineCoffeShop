@@ -19,6 +19,9 @@ public class HomeViewModel
     public string Sort { get; init; } = "popular";
 
     public Product Hero { get; init; } = null!;
+
+    /// <summary>Текущий поисковый запрос.</summary>
+    public string? Query { get; init; }
 }
 
 public class ProductDetailsViewModel
