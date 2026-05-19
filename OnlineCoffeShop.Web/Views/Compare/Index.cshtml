@@ -1,0 +1,89 @@
+﻿@model CompareViewModel
+@{
+    ViewData["Title"] = "Сравнение товаров";
+    var ru = new System.Globalization.CultureInfo("ru-RU");
+    var here = Context.Request.Path + Context.Request.QueryString;
+    string CountWord(int n) => n % 10 == 1 && n % 100 != 11 ? "товар"
+        : n % 10 is >= 2 and <= 4 && n % 100 is < 12 or > 14 ? "товара"
+        : "товаров";
+}
+@if (Model.Products.Count == 0)
+{
+    <div class="screen shell cart-empty">
+        <div class="cart-empty-mark">пусто</div>
+        <h1 class="h-display cart-empty-title">Список сравнения пуст</h1>
+        <p class="muted cart-empty-desc">Нажимайте значок сравнения на карточках товаров — они появятся здесь.</p>
+        <a class="btn btn-primary" asp-controller="Home" asp-action="Index">Открыть каталог →</a>
+    </div>
+}
+else
+{
+    <div class="screen shell" style="padding-top:40px;padding-bottom:60px">
+        <h1 class="h-display h-page">Сравнение товаров</h1>
+        <p class="muted" style="margin-bottom:24px">@Model.Products.Count @CountWord(Model.Products.Count) в сравнении</p>
+
+        <div class="compare-toolbar">
+            @if (Model.DiffOnly)
+            {
+                <a class="chip active" asp-action="Index">✓ Только отличия</a>
+            }
+            else
+            {
+                <a class="chip" asp-action="Index" asp-route-diffOnly="true">Показать только отличия</a>
+            }
+            <form method="post" asp-action="Clear">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="chip">✕ Очистить список</button>
+            </form>
+        </div>
+
+        <div class="compare-wrap">
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th class="compare-label"></th>
+                        @foreach (var p in Model.Products)
+                        {
+                            <th class="compare-col-head">
+                                <div class="compare-card">
+                                    <a class="compare-thumb" asp-controller="Product" asp-action="Details" asp-route-slug="@p.Slug">
+                                        <partial name="_ProductArt" model="p" />
+                                    </a>
+                                    <a class="compare-name" asp-controller="Product" asp-action="Details" asp-route-slug="@p.Slug">@p.Name</a>
+                                    <div class="compare-price">@p.Price.ToString("N0", ru) ₽</div>
+                                    <div class="compare-card-actions">
+                                        <form method="post" asp-controller="Cart" asp-action="Add" asp-route-returnUrl="@here">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@p.Id" />
+                                            <button type="submit" class="btn btn-primary btn-sm btn-block">В корзину</button>
+                                        </form>
+                                        <form method="post" asp-controller="Compare" asp-action="Toggle" asp-route-returnUrl="@here">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@p.Id" />
+                                            <button type="submit" class="btn btn-ghost btn-sm btn-block">Убрать из сравнения</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var row in Model.Rows)
+                    {
+                        if (Model.DiffOnly && row.AllSame) { continue; }
+                        <tr class="@(row.AllSame ? "" : "diff")">
+                            <td class="compare-label">@row.Label</td>
+                            @foreach (var v in row.Values)
+                            {
+                                <td class="compare-cell">@v</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <a asp-controller="Home" asp-action="Index" class="btn btn-ghost" style="margin-top:24px;width:fit-content">← Продолжить покупки</a>
+    </div>
+}

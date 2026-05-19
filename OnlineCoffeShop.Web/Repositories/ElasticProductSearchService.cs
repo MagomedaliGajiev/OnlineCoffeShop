@@ -1,6 +1,5 @@
 ﻿using Elastic.Clients.Elasticsearch;
 using Elastic.Transport.Products.Elasticsearch;
-using Microsoft.Extensions.Logging;
 using OnlineCoffeShop.Web.Models;
 using OnlineCoffeShop.Web.Models.Search;
 using OnlineCoffeShop.Web.Repositories.Abstractions;
