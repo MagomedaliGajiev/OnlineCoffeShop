@@ -9,16 +9,31 @@ public class HomeController : Controller
 {
     private readonly IProductRepository _product;
     private readonly IFavoritesRepository _favs;
+    private readonly IProductSearchService _search;
 
-    public HomeController(IProductRepository product, IFavoritesRepository favs)
+    public HomeController(IProductRepository product, IFavoritesRepository favs, IProductSearchService search)
     {
         _product = product;
         _favs = favs;
+        _search = search;
     }
 
-    public IActionResult Index(string filter = "all", string? roast = null, string? origin = null, string sort = "popular")
+    public async Task<IActionResult> Index(
+        string filter = "all", string? roast = null, string? origin = null,
+        string sort = "popular", string? q = null)
     {
-        var products = _product.Query(filter, roast, origin, sort).ToList();
+        List<Product> products;
+        if (!string.IsNullOrWhiteSpace(q))
+        {
+            var ids = await _search.SearchAsync(q);
+            // Порядок релевантности сохраняем, недостающие товары отсекаем.
+            products = ids.Select(_product.Find).Where(p => p is not null).Select(p => p!).ToList();
+        }
+        else
+        {
+            products = _product.Query(filter, roast, origin, sort).ToList();
+        }
+
         var vm = new HomeViewModel
         {
             Categories = _product.Categories,
@@ -28,6 +43,7 @@ public class HomeController : Controller
             Roast = roast,
             Origin = origin,
             Sort = sort,
+            Query = q,
             Hero = _product.GetAll[0],
         };
         return View(vm);

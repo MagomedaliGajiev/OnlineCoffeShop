@@ -34,7 +34,7 @@
                         </nav>
                         <form class="searchbar" method="get" asp-controller="Home" asp-action="Index">
                             <span class="icon">⌕</span>
-                            <input name="q" placeholder="Найти кофе, чашку, кофемолку…" />
+                            <input name="q" value="@Context.Request.Query["q"]" placeholder="Найти кофе, чашку, кофемолку…" />
                         </form>
                         <a class="icon-btn @(route == "fav" ? "active" : "")" asp-controller="Fav" asp-action="Index" title="Избранное">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="stroke: rgb(205, 156, 46)">

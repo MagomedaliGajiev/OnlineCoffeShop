@@ -1,3 +1,4 @@
+using Elastic.Clients.Elasticsearch;
 using Microsoft.EntityFrameworkCore;
 using OnlineCoffeShop.Web.Data;
 using OnlineCoffeShop.Web.Repositories;
@@ -18,7 +19,28 @@ builder.Services.AddScoped<IFavoritesRepository, SessionFavoritesRepository>();
 builder.Services.AddScoped<ICartRepository, DbCartRepository>();
 builder.Services.AddSingleton<IOrderRepository, InMemoryOrderRepository>();
 
+builder.Services.AddSingleton(_ =>
+{
+    var uri = builder.Configuration["Elasticsearch:Uri"] ?? "http://localhost:9202";
+    var settings = new ElasticsearchClientSettings(new Uri(uri));
+    return new ElasticsearchClient(settings);
+});
+builder.Services.AddScoped<IProductSearchService>(sp =>
+{
+    var client = sp.GetRequiredService<ElasticsearchClient>();
+    var logger = sp.GetRequiredService<ILogger<ElasticProductSearchService>>();
+    var index = builder.Configuration["Elasticsearch:ProductsIndex"] ?? "products";
+    return new ElasticProductSearchService(client, logger, index);
+});
+
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var products = scope.ServiceProvider.GetRequiredService<IProductRepository>().GetAll;
+    var search = scope.ServiceProvider.GetRequiredService<IProductSearchService>();
+    await search.ReindexAsync(products);
+}
 
 app.UseHttpsRedirection();
 app.UseRouting();

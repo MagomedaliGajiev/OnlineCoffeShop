@@ -74,7 +74,15 @@
         </div>
 
         <div class="row-between">
-            <h2 class="h-section">Популярное</h2>
+            @if (!string.IsNullOrWhiteSpace(Model.Query))
+            {
+                <h2 class="h-section">Результаты поиска: «@Model.Query»</h2>
+                <span class="muted" style="font-size:13.5px">Найдено товаров: @Model.Products.Count</span>
+            }
+            else
+            {
+                <h2 class="h-section">Популярное</h2>
+            }
         </div>
         <form method="get" class="filter-bar">
             <span class="filter-bar-label">Фильтры:</span>
@@ -117,7 +125,16 @@
 
         @if (Model.Products.Count == 0)
         {
-            <div class="empty-grid">Ничего не найдено. Сбросьте фильтры.</div>
+            <div class="empty-grid">
+                @if (!string.IsNullOrWhiteSpace(Model.Query))
+                {
+                    <text>По запросу «@Model.Query» ничего не найдено.</text>
+                }
+                else
+                {
+                    <text>Ничего не найдено. Сбросьте фильтры.</text>
+                }
+            </div>
         }
 
         <div class="benefits">
