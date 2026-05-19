@@ -8,4 +8,10 @@ public class ProductSearchDocument
 
     /// <summary>Имя товара — основное поле для полнотекстового поиска.</summary>
     public string Name { get; set; } = string.Empty;
+
+    /// <summary>Описание товара (Product.Blurb).</summary>
+    public string Description { get; set; } = string.Empty;
+
+    /// <summary>Вкусовые ноты товара (Product.Notes).</summary>
+    public string[] Notes { get; set; } = Array.Empty<string>();
 }

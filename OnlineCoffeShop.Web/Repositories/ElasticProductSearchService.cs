@@ -39,7 +39,10 @@ public class ElasticProductSearchService : IProductSearchService
 
         var docs = products.Select(p => new ProductSearchDocument
         {
-            Id = p.Id, Name = p.Name,
+            Id = p.Id,
+            Name = p.Name,
+            Description = p.Blurb,
+            Notes = p.Notes ?? Array.Empty<string>(),
         });
 
         var bulk = await _client.IndexManyAsync(docs, _index);
@@ -64,10 +67,10 @@ public class ElasticProductSearchService : IProductSearchService
         }
 
         var response = await _client.SearchAsync<ProductSearchDocument>(s => s
-            .Index(_index)
+            .Indices(_index)
             .Query(q => q
-                .Match(m => m
-                    .Field(f => f.Name)
+                .MultiMatch(mm => mm
+                    .Fields(f => f.Name, f => f.Description, f => f.Notes)
                     .Query(query)
                     .Fuzziness(new Fuzziness("AUTO")))));
 
