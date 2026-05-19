@@ -187,3 +187,24 @@ public class ProductFormViewModel
 
     public string Blurb { get; set; } = string.Empty;
 }
+
+public class CompareViewModel
+{
+    public IReadOnlyList<Product> Products { get; init; } = Array.Empty<Product>();
+
+    public IReadOnlyList<CompareRow> Rows { get; init; } = Array.Empty<CompareRow>();
+
+    /// <summary>Показывать только строки, где значения различаются.</summary>
+    public bool DiffOnly { get; init; }
+}
+
+/// <summary>Одна строка таблицы сравнения: название характеристики и значения по каждому товару.</summary>
+public class CompareRow
+{
+    public string Label { get; init; } = string.Empty;
+
+    public IReadOnlyList<string> Values { get; init; } = Array.Empty<string>();
+
+    /// <summary>true — у всех товаров значение одинаковое (строка не «отличие»).</summary>
+    public bool AllSame { get; init; }
+}

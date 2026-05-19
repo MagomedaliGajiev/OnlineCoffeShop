@@ -16,6 +16,7 @@ builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IProductRepository, InMemoryProductRepository>();
 builder.Services.AddScoped<IFavoritesRepository, SessionFavoritesRepository>();
+builder.Services.AddScoped<ICompareRepository, SessionCompareRepository>();
 builder.Services.AddScoped<ICartRepository, DbCartRepository>();
 builder.Services.AddSingleton<IOrderRepository, InMemoryOrderRepository>();
 
