@@ -17,18 +17,25 @@
 
             <form asp-controller="Account" asp-action="Login" method="post">
                 <input type="hidden" asp-for="ReturnUrl" />
+
+                @* Ошибки УРОВНЯ МОДЕЛИ (наша «логин ≠ пароль»). *@
                 <div asp-validation-summary="ModelOnly" class="field-error" style="margin-bottom:12px"></div>
 
                 <div class="form-row">
-                    <label asp-for="Email" class="field-label">Email</label>
-                    <input class="field" asp-for="Email" type="email" placeholder="your@email.com" />
+                    @* label берёт текст из [Display(Name)] — можно оставить пустым *@
+                    <label asp-for="Email" class="field-label"></label>
+                    @* НЕТ placeholder="..." — тогда подставится [Display(Prompt)] *@
+                    <input class="field" asp-for="Email" />
                     <span asp-validation-for="Email" class="field-error"></span>
                 </div>
+
                 <div class="form-row-tight">
-                    <label asp-for="Password" class="field-label">Пароль</label>
-                    <input class="field" asp-for="Password" placeholder="••••••••" />
+                    <label asp-for="Password" class="field-label"></label>
+                    @* type="password" подставится сам из [DataType(DataType.Password)] *@
+                    <input class="field" asp-for="Password" />
                     <span asp-validation-for="Password" class="field-error"></span>
                 </div>
+
                 <div class="row-between-tight">
                     <label class="remember-label">
                         <input type="checkbox" asp-for="Remember" />

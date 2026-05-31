@@ -10,23 +10,35 @@
 
         <form asp-controller="Account" asp-action="Register" method="post">
             <input type="hidden" asp-for="ReturnUrl" />
+
+            @* Ошибки уровня модели (логин ≠ пароль). *@
             <div asp-validation-summary="ModelOnly" class="field-error" style="margin-bottom:12px"></div>
 
             <div class="form-row">
-                <label asp-for="Name" class="field-label">Имя</label>
-                <input class="field" asp-for="Name" placeholder="Как к вам обращаться?" />
+                <label asp-for="Name" class="field-label"></label>
+                <input class="field" asp-for="Name" />
                 <span asp-validation-for="Name" class="field-error"></span>
             </div>
+
             <div class="form-row">
-                <label asp-for="Email" class="field-label">Email</label>
-                <input class="field" asp-for="Email" type="email" placeholder="your@email.com" />
+                <label asp-for="Email" class="field-label"></label>
+                <input class="field" asp-for="Email" />
                 <span asp-validation-for="Email" class="field-error"></span>
             </div>
+
             <div class="form-row-tight">
-                <label asp-for="Password" class="field-label">Пароль</label>
-                <input class="field" asp-for="Password" type="password" placeholder="минимум 6 символов" />
+                <label asp-for="Password" class="field-label"></label>
+                <input class="field" asp-for="Password" />
                 <span asp-validation-for="Password" class="field-error"></span>
             </div>
+
+            @* НОВЫЙ блок — подтверждение пароля *@
+            <div class="form-row-tight">
+                <label asp-for="ConfirmPassword" class="field-label"></label>
+                <input class="field" asp-for="ConfirmPassword" />
+                <span asp-validation-for="ConfirmPassword" class="field-error"></span>
+            </div>
+
             <label class="terms-label">
                 <input type="checkbox" asp-for="Agree" />
                 <span>Я согласен с условиями использования</span>

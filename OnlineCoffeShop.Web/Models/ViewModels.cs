@@ -117,12 +117,18 @@ public class SuccessViewModel
 
 public class LoginViewModel
 {
-    [Required]
-    [EmailAddress]
+    [Required(ErrorMessage = "Введите email")]
+    [EmailAddress(ErrorMessage = "Некорректный email")]
+    [StringLength(30, MinimumLength = 5,
+        ErrorMessage = "Email должен быть от 5 до 30 символов")]
+    [Display(Name = "Email", Prompt = "your@email.com")]
     public string Email { get; set; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessage = "Введите пароль")]
     [DataType(DataType.Password)]
+    [StringLength(30, MinimumLength = 6,
+        ErrorMessage = "Пароль должен быть от 6 до 50 символов")]
+    [Display(Name = "Пароль", Prompt = "••••••••")]
     public string Password { get; set; } = string.Empty;
 
     public bool Remember { get; set; } = true;
@@ -133,15 +139,28 @@ public class LoginViewModel
 public class RegisterViewModel
 {
     [Required(ErrorMessage = "Укажите имя")]
+    [Display(Name = "Имя", Prompt = "Как к вам обращаться?")]
     public string Name { get; set; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessage = "Введите email")]
     [EmailAddress(ErrorMessage = "Некорректный email")]
+    [StringLength(30, MinimumLength = 5,
+        ErrorMessage = "Email должен быть от 5 до 30 символов")]
+    [Display(Name = "Email", Prompt = "your@email.com")]
     public string Email { get; set; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessage = "Введите пароль")]
     [DataType(DataType.Password)]
+    [StringLength(50, MinimumLength = 6,
+        ErrorMessage = "Пароль должен быть от 6 до 50 символов")]
+    [Display(Name = "Пароль", Prompt = "минимум 6 символов")]
     public string Password { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Повторите пароль")]
+    [DataType(DataType.Password)]
+    [Compare(nameof(Password), ErrorMessage = "Пароли не совпадают")]
+    [Display(Name = "Повторите пароль", Prompt = "ещё раз тот же пароль")]
+    public string ConfirmPassword { get; set; } = string.Empty;
 
     public bool Agree { get; set; }
 
