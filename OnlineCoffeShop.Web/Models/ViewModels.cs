@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using OnlineCoffeShop.Web.Validation;
 
 namespace OnlineCoffeShop.Web.Models;
 
@@ -74,23 +75,38 @@ public class CheckoutViewModel
     public decimal Total { get; init; }
 
     [Required(ErrorMessage = "Укажите имя")]
+    [StringLength(25, MinimumLength = 2,
+        ErrorMessage = "Имя должно быть от 2 до 25 символов")]
+    [Display(Name = "Имя", Prompt = "Как к вам обращаться?")]
     public string FirstName { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Укажите фамилию")]
+    [StringLength(25, MinimumLength = 2,
+        ErrorMessage = "Фамилия должна быть от 2 до 25 символов")]
+    [Display(Name = "Фамилия", Prompt = "Ваша фамилия")]
     public string LastName { get; set; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessage = "Укажите телефон")]
+    [DataType(DataType.PhoneNumber)]
+    [StringLength(16, MinimumLength = 5,
+        ErrorMessage = "Телефон должен быть от 5 до 16 символов")]
+    [Display(Name = "Телефон", Prompt = "+7 ___ ___ __ __")]
     [Phone(ErrorMessage = "Некорректный телефон")]
     public string Phone { get; set; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessage = "Укажите email")]
     [EmailAddress(ErrorMessage = "Некорректный email")]
+    [Display(Name = "Email", Prompt = "your@email.com")]
     public string Email { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Укажите город")]
+    [Display(Name = "Город", Prompt = "Москва")]
     public string City { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Укажите адрес")]
+    [StringLength(100, MinimumLength = 5,
+        ErrorMessage = "Адрес должен быть от 5 до 100 символов")]
+    [Display(Name = "Улица, дом", Prompt = "ул. Покровка, д. 1")]
     public string Address { get; set; } = string.Empty;
 
     public string Apt { get; set; } = string.Empty;
@@ -99,6 +115,14 @@ public class CheckoutViewModel
 
     public string Floor { get; set; } = string.Empty;
 
+    [Required(ErrorMessage = "Выберите дату доставки")]
+    [DataType(DataType.Date)]
+    [DateWithinThreeMonths] // ← наш кастомный валидатор (шаг 4)
+    [Display(Name = "Дата доставки")] // у даты — только Name, без Prompt (по заданию)
+    public DateTime? Date { get; set; }
+
+    [StringLength(512, ErrorMessage = "Комментарий — не более 512 символов")]
+    [Display(Name = "Комментарий курьеру", Prompt = "Например: позвонить за 15 минут")]
     public string? Comment { get; set; }
 
     public string Delivery { get; set; } = "courier";

@@ -34,6 +34,7 @@ public class CheckoutController : Controller
 
         if (!ModelState.IsValid)
         {
+            // переносим введённые значения обратно во вью + пересобираем строки заказа
             var invalidVm = BuildVm(lines, form.Delivery);
             invalidVm.FirstName = form.FirstName;
             invalidVm.LastName = form.LastName;
@@ -46,6 +47,7 @@ public class CheckoutController : Controller
             invalidVm.Floor = form.Floor;
             invalidVm.Comment = form.Comment;
             invalidVm.Payment = form.Payment;
+            invalidVm.Date = form.Date;
             return View("Index", invalidVm);
         }
 
