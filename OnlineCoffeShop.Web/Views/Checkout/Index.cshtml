@@ -17,22 +17,31 @@
     </div>
 
     <form method="post" asp-controller="Checkout" asp-action="Place">
+        <div asp-validation-summary="ModelOnly" class="text-danger" style="margin-bottom:16px"></div>
         @Html.AntiForgeryToken()
         <div style="display:grid;grid-template-columns:1fr 380px;gap:32px;align-items:start">
             <div>
                 <div style="margin-bottom:32px">
                     <h3 class="h-display" style="font-size:17px;margin:0 0 14px">1. Контактные данные</h3>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-                        <div><label class="field-label">Имя</label><input class="field" asp-for="FirstName" /></div>
-                        <div><label class="field-label">Фамилия</label><input class="field" asp-for="LastName" /></div>
                         <div>
-                            <label class="field-label">Телефон</label>
-                            <input class="field" asp-for="Phone"/>
+                            <label asp-for="FirstName" class="field-label"></label>
+                            <input class="field" asp-for="FirstName" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+                        <div>
+                            <label asp-for="LastName" class="field-label"></label>
+                            <input class="field" asp-for="LastName" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+                        <div>
+                            <label asp-for="Phone" class="field-label"></label>
+                            <input class="field" asp-for="Phone" />
                             <span asp-validation-for="Phone" class="text-danger"></span>
                         </div>
                         <div>
-                            <label class="field-label">Email</label>
-                            <input class="field" asp-for="Email"/>
+                            <label asp-for="Email" class="field-label"></label>
+                            <input class="field" asp-for="Email" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
                     </div>
@@ -42,15 +51,15 @@
                     <h3 class="h-display" style="font-size:17px;margin:0 0 14px">2. Способ доставки</h3>
                     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px" id="delivery-row">
                         @foreach (var (id, title, sub, price, priceGood, glyph) in new[]
-                        {
-                            ("courier", "Курьер", "Москва, завтра 10–22", Model.Subtotal >= 2000 ? "Бесплатно от 2 000 ₽" : "290 ₽", Model.Subtotal >= 2000, "→"),
-                            ("pickup",  "Самовывоз", "Шоурум на Покровке", "Сегодня · 0 ₽", true, "◇"),
-                            ("cdek",    "СДЭК", "По России, 2–4 дня", "от 290 ₽", false, "≋")
-                        })
+                                  {
+                                      ("courier", "Курьер", "Москва, завтра 10–22", Model.Subtotal >= 2000 ? "Бесплатно от 2 000 ₽" : "290 ₽", Model.Subtotal >= 2000, "→"),
+                                      ("pickup", "Самовывоз", "Шоурум на Покровке", "Сегодня · 0 ₽", true, "◇"),
+                                      ("cdek", "СДЭК", "По России, 2–4 дня", "от 290 ₽", false, "≋")
+                                  })
                         {
                             var active = Model.Delivery == id;
                             <label style="text-align:left;padding:18px;background:@(active ? "var(--bg-sand)" : "white");border:@(active ? "2px solid var(--ink)" : "1px solid var(--line)");border-radius:12px;cursor:pointer;display:grid;gap:6px">
-                                <input type="radio" name="Delivery" value="@id" style="display:none" checked="@active" />
+                                <input type="radio" name="Delivery" value="@id" style="display:none" checked="@active"/>
                                 <div style="width:32px;height:32px;border-radius:8px;background:@(active ? "var(--ink)" : "var(--bg-sand)");color:@(active ? "var(--ochre)" : "var(--ink)");display:grid;place-items:center;font-family:var(--font-serif);font-style:italic;font-size:16px;font-weight:600">@glyph</div>
                                 <div style="font-weight:800;font-size:14px;margin-top:4px">@title</div>
                                 <div class="muted" style="font-size:12px">@sub</div>
@@ -63,16 +72,30 @@
                 <div style="margin-bottom:32px">
                     <h3 class="h-display" style="font-size:17px;margin:0 0 14px">3. Адрес доставки</h3>
                     <div style="display:grid;gap:12px">
-                        <div><label class="field-label">Город</label><input class="field" asp-for="City" /></div>
-                        <div><label class="field-label">Улица, дом</label><input class="field" asp-for="Address" /></div>
-                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
-                            <div><label class="field-label">Квартира</label><input class="field" asp-for="Apt" /></div>
-                            <div><label class="field-label">Подъезд</label><input class="field" asp-for="Entrance" /></div>
-                            <div><label class="field-label">Этаж</label><input class="field" asp-for="Floor" /></div>
+                        <div>
+                            <label asp-for="City" class="field-label"></label>
+                            <input class="field" asp-for="City"/>
+                            <span asp-validation-for="City" class="text-danger"></span>
                         </div>
                         <div>
-                            <label class="field-label">Комментарий курьеру</label>
-                            <textarea class="field" asp-for="Comment" style="height:84px;padding-top:12px;resize:vertical" placeholder="Например: позвонить за 15 минут до доставки"></textarea>
+                            <label asp-for="Address" class="field-label"></label>
+                            <input class="field" asp-for="Address"/>
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+                            <div><label class="field-label">Квартира</label><input class="field" asp-for="Apt"/></div>
+                            <div><label class="field-label">Подъезд</label><input class="field" asp-for="Entrance"/></div>
+                            <div><label class="field-label">Этаж</label><input class="field" asp-for="Floor"/></div>
+                        </div>
+                        <div>
+                            <label asp-for="Date" class="field-label"></label>
+                            <input class="field" asp-for="Date"/> @* type="date" подставится из [DataType(DataType.Date)] *@
+                            <span asp-validation-for="Date" class="text-danger"></span>
+                        </div>
+                        <div>
+                            <label asp-for="Comment" class="field-label"></label>
+                            <textarea class="field" asp-for="Comment" style="height:84px;padding-top:12px;resize:vertical"></textarea>
+                            <span asp-validation-for="Comment" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
@@ -81,16 +104,16 @@
                     <h3 class="h-display" style="font-size:17px;margin:0 0 14px">4. Оплата</h3>
                     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px">
                         @foreach (var (method, title, sub) in new[]
-                        {
-                            (PaymentMethod.CARD_ONLINE, "Картой онлайн", "Visa · MC · МИР"),
-                            (PaymentMethod.SBP,         "СБП", "Перевод по QR"),
-                            (PaymentMethod.APPLE_PAY,   "Apple Pay", "Touch / Face ID"),
-                            (PaymentMethod.GOOGLE_PAY,  "Google Pay", "Привязанные карты")
-                        })
+                                  {
+                                      (PaymentMethod.CARD_ONLINE, "Картой онлайн", "Visa · MC · МИР"),
+                                      (PaymentMethod.SBP, "СБП", "Перевод по QR"),
+                                      (PaymentMethod.APPLE_PAY, "Apple Pay", "Touch / Face ID"),
+                                      (PaymentMethod.GOOGLE_PAY, "Google Pay", "Привязанные карты")
+                                  })
                         {
                             var active = Model.Payment == method;
                             <label style="text-align:left;padding:16px;background:@(active ? "var(--bg-sand)" : "white");border:@(active ? "2px solid var(--ink)" : "1px solid var(--line)");border-radius:12px;cursor:pointer;display:block">
-                                <input type="radio" name="Payment" value="@method" style="display:none" checked="@active" />
+                                <input type="radio" name="Payment" value="@method" style="display:none" checked="@active"/>
                                 <div style="display:flex;align-items:center;gap:10px">
                                     <span style="width:16px;height:16px;border-radius:999px;border:2px solid @(active ? "var(--ink)" : "var(--line)");background:@(active ? "radial-gradient(circle, var(--ink) 0 35%, transparent 40%)" : "white")"></span>
                                     <div style="font-weight:700;font-size:14px">@title</div>
@@ -109,7 +132,7 @@
                     {
                         <div style="display:flex;gap:12px;align-items:center">
                             <div style="width:42px;height:42px;border-radius:8px;overflow:hidden;flex-shrink:0">
-                                <partial name="_ProductArt" model="line.Product" />
+                                <partial name="_ProductArt" model="line.Product"/>
                             </div>
                             <div style="flex:1;font-size:12.5px;line-height:1.4">
                                 <div style="color:#f6ecd6">@line.Product.Name</div>
@@ -141,3 +164,8 @@
         </div>
     </form>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/within3m-validator.js" asp-append-version="true"></script>
+}
