@@ -17,18 +17,25 @@
 
             <form asp-controller="Account" asp-action="Login" method="post">
                 <input type="hidden" asp-for="ReturnUrl" />
+
+                @* Ошибки УРОВНЯ МОДЕЛИ (наша «логин ≠ пароль»). *@
                 <div asp-validation-summary="ModelOnly" class="field-error" style="margin-bottom:12px"></div>
 
                 <div class="form-row">
-                    <label asp-for="Email" class="field-label">Email</label>
-                    <input class="field" asp-for="Email" type="email" placeholder="your@email.com" />
+                    @* label берёт текст из [Display(Name)] — можно оставить пустым *@
+                    <label asp-for="Email" class="field-label"></label>
+                    @* НЕТ placeholder="..." — тогда подставится [Display(Prompt)] *@
+                    <input class="field" asp-for="Email" />
                     <span asp-validation-for="Email" class="field-error"></span>
                 </div>
+
                 <div class="form-row-tight">
-                    <label asp-for="Password" class="field-label">Пароль</label>
-                    <input class="field" asp-for="Password" placeholder="••••••••" />
+                    <label asp-for="Password" class="field-label"></label>
+                    @* type="password" подставится сам из [DataType(DataType.Password)] *@
+                    <input class="field" asp-for="Password" />
                     <span asp-validation-for="Password" class="field-error"></span>
                 </div>
+
                 <div class="row-between-tight">
                     <label class="remember-label">
                         <input type="checkbox" asp-for="Remember" />
@@ -53,24 +60,9 @@
                 Первый заказ — скидка 10% и +200 ₽ на бонусный счёт
             </p>
             <form asp-controller="Account" asp-action="Register" method="post">
-                <input type="hidden" name="ReturnUrl" value="@returnUrl" />
-                <div class="form-row-tight">
-                    <label class="field-label">Имя</label>
-                    <input class="field" name="Name" placeholder="Как к вам обращаться?" />
-                </div>
-                <div class="form-row-tight">
-                    <label class="field-label">Email</label>
-                    <input class="field" name="Email" type="email" placeholder="your@email.com" />
-                </div>
-                <div class="form-row-wide">
-                    <label class="field-label">Пароль</label>
-                    <input class="field" name="Password" type="password" placeholder="минимум 6 символов" />
-                </div>
-                <label class="terms-label">
-                    <input type="checkbox" name="Agree" value="true" />
-                    <span>Я согласен с <u>условиями использования</u> и <u>политикой конфиденциальности</u></span>
-                </label>
-                <button type="submit" class="btn btn-cta btn-block btn-lg">Создать аккаунт</button>
+                <input type="hidden" asp-for="ReturnUrl" />
+                @* эта форма работает с RegisterViewModel, но вью типизирована
+       под LoginViewModel — поэтому asp-for тут НЕ сработает напрямую *@
             </form>
 
             <div class="benefits-list">
