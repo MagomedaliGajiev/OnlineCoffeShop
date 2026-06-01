@@ -222,7 +222,7 @@ public class ProductFormViewModel
     [Range(0, 1_000_000,
         ErrorMessage = "Цена должна быть от 0 до 1 000 000 ₽")]
     [Display(Name = "Цена, ₽", Prompt = "Например: 1290")]
-    public decimal Price { get; set; }
+    public decimal? Price { get; set; }
 
     public decimal? OldPrice { get; set; }
 
