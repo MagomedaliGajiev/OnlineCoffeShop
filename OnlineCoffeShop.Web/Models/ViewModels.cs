@@ -196,6 +196,9 @@ public class ProductFormViewModel
     public Guid Id { get; set; } // пусто = создание, заполнено = редактирование
 
     [Required(ErrorMessage = "Укажите название")]
+    [StringLength(200, MinimumLength = 2,
+        ErrorMessage = "Название должно быть от 2 до 200 символов")]
+    [Display(Name = "Название", Prompt = "Эфиопия Иргачеффе")]
     public string Name { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "Укажите slug")]
@@ -215,8 +218,11 @@ public class ProductFormViewModel
 
     public int? WeightGrams { get; set; }
 
-    [Range(0, 1_000_000, ErrorMessage = "Цена не может быть отрицательной")]
-    public decimal Price { get; set; }
+    [Required(ErrorMessage = "Укажите цену")]
+    [Range(0, 1_000_000,
+        ErrorMessage = "Цена должна быть от 0 до 1 000 000 ₽")]
+    [Display(Name = "Цена, ₽", Prompt = "Например: 1290")]
+    public decimal? Price { get; set; }
 
     public decimal? OldPrice { get; set; }
 
@@ -228,6 +234,8 @@ public class ProductFormViewModel
 
     public string? Specs { get; set; } // характеристики — построчно "Ключ=Значение"
 
+    [StringLength(4096, ErrorMessage = "Описание — не более 4096 символов")]
+    [Display(Name = "Описание", Prompt = "Краткое описание товара")]
     public string Blurb { get; set; } = string.Empty;
 }
 

@@ -90,7 +90,7 @@ public class AdminController : Controller
         Roast = string.IsNullOrWhiteSpace(m.Roast) ? null : m.Roast,
         Origin = string.IsNullOrWhiteSpace(m.Origin) ? null : m.Origin,
         WeightGrams = m.WeightGrams,
-        Price = m.Price,
+        Price = m.Price ?? 0,
         OldPrice = m.OldPrice,
         Tag = m.Tag,
         Art = m.Art,
