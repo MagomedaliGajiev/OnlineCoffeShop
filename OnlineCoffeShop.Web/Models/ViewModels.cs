@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using OnlineCoffeShop.Web.Models.Orders;
 using OnlineCoffeShop.Web.Validation;
 
 namespace OnlineCoffeShop.Web.Models;

@@ -1,5 +1,42 @@
-﻿@{
+﻿@model IReadOnlyList<Order>
+@{
     ViewData["Title"] = "Заказы";
     Layout = "_AdminLayout";
 }
 <h1 class="admin-title">Заказы</h1>
+
+<table class="admin-table" style="width:100%;border-collapse:collapse;margin-top:16px">
+    <thead>
+    <tr>
+        <th style="text-align:left">#</th>
+        <th style="text-align:right">Сумма</th>
+        <th style="text-align:left">Статус</th>
+        <th style="text-align:center">Пользователь (логин)</th>
+        <th style="text-align:center">Дата</th>
+        <th style="text-align:center">Время</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @{ var i = 1; }
+    @foreach (var o in Model)
+    {
+        <tr>
+            <td>@i</td>
+            <td style="text-align:right">@o.Total.ToString("N2") ₽</td>
+            <td>@o.Status.DisplayName()</td>
+            <td style="text-align:center">@(string.IsNullOrEmpty(o.UserId) ? "—" : o.UserId)</td>
+            <td style="text-align:center">@o.PlacedAt.ToString("dd.MM.yyyy")</td>
+            <td style="text-align:center">@o.PlacedAt.ToString("HH:mm")</td>
+            <td style="text-align:right">
+                <a class="btn btn-sm btn-ghost" asp-action="OrderDetails" asp-route-id="@o.Id">Подробнее</a>
+            </td>
+        </tr>
+        i++;
+    }
+    </tbody>
+</table>
+
+<p style="text-align:right;font-weight:700;margin-top:12px">
+    Общее количество заказов: @Model.Count
+</p>

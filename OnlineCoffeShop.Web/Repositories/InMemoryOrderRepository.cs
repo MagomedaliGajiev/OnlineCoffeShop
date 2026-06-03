@@ -1,4 +1,5 @@
 ﻿using OnlineCoffeShop.Web.Models;
+using OnlineCoffeShop.Web.Models.Orders;
 using OnlineCoffeShop.Web.Repositories.Abstractions;
 
 namespace OnlineCoffeShop.Web.Repositories;
@@ -17,28 +18,28 @@ public class InMemoryOrderRepository : IOrderRepository
             {
                 Id = Guid.NewGuid(), Number = "BH-2026-1247", UserId = "_demo",
                 PlacedAt = new DateTime(2026, 5, 10), Total = 5860,
-                Status = OrderStatus.Pending, Delivery = DeliveryMethod.Courier,
+                Status = OrderStatus.CREATED, Delivery = DeliveryMethod.Courier,
                 Items = ListArt(ArtStyle.Dark, ArtStyle.Medium, ArtStyle.Gear),
             },
             new()
             {
                 Id = Guid.NewGuid(), Number = "BH-2026-1102", UserId = "_demo",
                 PlacedAt = new DateTime(2026, 4, 28), Total = 1640,
-                Status = OrderStatus.Delivered, Delivery = DeliveryMethod.Courier,
+                Status = OrderStatus.DELIVERED, Delivery = DeliveryMethod.Courier,
                 Items = ListArt(ArtStyle.Dark, ArtStyle.Medium),
             },
             new()
             {
                 Id = Guid.NewGuid(), Number = "BH-2026-0987", UserId = "_demo",
                 PlacedAt = new DateTime(2026, 4, 15), Total = 3490,
-                Status = OrderStatus.Delivered, Delivery = DeliveryMethod.Courier,
+                Status = OrderStatus.DELIVERED, Delivery = DeliveryMethod.Courier,
                 Items = ListArt(ArtStyle.Gear),
             },
             new()
             {
                 Id = Guid.NewGuid(), Number = "BH-2026-0844", UserId = "_demo",
                 PlacedAt = new DateTime(2026, 4, 2), Total = 4720,
-                Status = OrderStatus.Delivered, Delivery = DeliveryMethod.Courier,
+                Status = OrderStatus.DELIVERED, Delivery = DeliveryMethod.Courier,
                 Items = ListArt(ArtStyle.Medium, ArtStyle.Dark, ArtStyle.Tan, ArtStyle.Gift), },
         };
     }
@@ -82,7 +83,7 @@ public class InMemoryOrderRepository : IOrderRepository
                 UserId = userId,
                 PlacedAt = DateTime.Now,
                 Total = total,
-                Status = OrderStatus.Pending,
+                Status = OrderStatus.CREATED,
                 Delivery = form.Delivery switch
                 {
                     "pickup" => DeliveryMethod.Pickup,
@@ -99,11 +100,31 @@ public class InMemoryOrderRepository : IOrderRepository
                 Entrance = form.Entrance,
                 Floor = form.Floor,
                 Comment = form.Comment,
+                DeliveryDate = form.Date,
                 Payment = form.Payment,
             };
 
             _orders.Insert(0, order);
             return order;
+        }
+    }
+
+    public IReadOnlyList<Order> GetAll()
+    {
+        lock (_lock)
+        {
+            return _orders
+                .OrderByDescending(o => o.PlacedAt) // свежие сверху
+                .ToList();
+        }
+    }
+
+    public void UpdateStatus(Guid id, OrderStatus status)
+    {
+        lock (_lock)
+        {
+            var order = _orders.FirstOrDefault(o => o.Id == id);
+            order?.Status = status;
         }
     }
 
