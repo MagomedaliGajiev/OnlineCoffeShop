@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineCoffeShop.Web.Models;
+using OnlineCoffeShop.Web.Models.Orders;
 using OnlineCoffeShop.Web.Repositories.Abstractions;
 
 namespace OnlineCoffeShop.Web.Controllers;
@@ -7,16 +8,33 @@ namespace OnlineCoffeShop.Web.Controllers;
 public class AdminController : Controller
 {
     private readonly IProductRepository _products;
+    private readonly IOrderRepository _orders;
 
-    public AdminController(IProductRepository products)
+    public AdminController(IProductRepository products, IOrderRepository orders)
     {
         _products = products;
+        _orders = orders;
     }
 
     // Точка входа кнопки: сразу открываем первый раздел — "Заказы"
     public IActionResult Index() => RedirectToAction(nameof(Orders));
 
-    public IActionResult Orders() => View();
+    public IActionResult Orders() => View(_orders.GetAll());
+
+    public IActionResult OrderDetails(Guid id)
+    {
+        var order = _orders.GetById(id);
+        return order is null ? NotFound() : View(order);
+    }
+
+    // Приём смены статуса (POST)
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult UpdateOrderStatus(Guid id, OrderStatus status)
+    {
+        _orders.UpdateStatus(id, status);
+        return RedirectToAction(nameof(OrderDetails), new { id }); // PRG-паттерн
+    }
 
     public IActionResult Users() => View();
 

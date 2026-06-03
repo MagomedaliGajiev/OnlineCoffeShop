@@ -1,0 +1,66 @@
+﻿@model Order
+@{
+    ViewData["Title"] = "Детали заказа";
+    Layout = "_AdminLayout";
+}
+<h1 class="admin-title">Детали заказа</h1>
+
+<table class="admin-table" style="width:100%;border-collapse:collapse">
+    <tr><td>ID</td><td>@Model.Id</td></tr>
+    <tr><td>Стоимость</td><td><b>@Model.Total.ToString("N2") ₽</b></td></tr>
+    <tr><td>Количество позиций</td><td>@Model.Items.Count</td></tr>
+    <tr><td>Количество товаров</td><td>@Model.Count</td></tr>
+    <tr><td>Время создания</td><td>@Model.PlacedAt.ToString("dd.MM.yyyy HH:mm:ss")</td></tr>
+</table>
+
+<h3 class="admin-title" style="font-size:18px;margin-top:24px">Покупатель</h3>
+<table class="admin-table" style="width:100%;border-collapse:collapse">
+    <tr><td>Имя</td><td>@Model.CustomerName</td></tr>
+    <tr><td>Телефон</td><td>@Model.Phone</td></tr>
+    <tr><td>Адрес</td><td>@Model.City, @Model.Address</td></tr>
+    <tr><td>Дата доставки</td><td>@(Model.DeliveryDate?.ToString("dd.MM.yyyy") ?? "—")</td></tr>
+    <tr><td>Комментарий</td><td>@Model.Comment</td></tr>
+</table>
+
+<h3 class="admin-title" style="font-size:18px;margin-top:24px">Состав заказа</h3>
+<table class="admin-table" style="width:100%;border-collapse:collapse">
+    <thead>
+    <tr>
+        <th style="text-align:left">#</th>
+        <th style="text-align:left">Наименование товара</th>
+        <th style="text-align:right">Цена, руб.</th>
+        <th style="text-align:center">Количество, шт.</th>
+        <th style="text-align:right">Стоимость, руб.</th>
+    </tr>
+    </thead>
+    <tbody>
+    @{ var n = 1; }
+    @foreach (var item in Model.Items)
+    {
+        <tr>
+            <td>@n</td>
+            <td>@item.Name</td>
+            <td style="text-align:right">@item.Price.ToString("N2") ₽</td>
+            <td style="text-align:center">@item.Qty</td>
+            <td style="text-align:right"><b>@((item.Price * item.Qty).ToString("N2")) ₽</b></td>
+        </tr>
+        n++;
+    }
+    </tbody>
+</table>
+
+<!-- Форма смены статуса -->
+<form asp-action="UpdateOrderStatus" method="post" style="margin-top:24px;display:flex;gap:12px;align-items:center">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.Id" />
+
+    <label class="field-label" style="margin:0">Статус заказа</label>
+    <select name="status" class="field" style="width:auto">
+        @foreach (var s in Enum.GetValues<OrderStatus>())
+        {
+            <option value="@s" selected="@(s == Model.Status)">@s.DisplayName()</option>
+        }
+    </select>
+
+    <button type="submit" class="btn btn-cta">Обновить статус</button>
+</form>

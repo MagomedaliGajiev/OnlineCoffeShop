@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineCoffeShop.Web.Models;
+using OnlineCoffeShop.Web.Models.Orders;
 using OnlineCoffeShop.Web.Repositories.Abstractions;
 
 namespace OnlineCoffeShop.Web.Controllers;
@@ -25,7 +26,7 @@ public class SuccessController : Controller
                 UserId = "_demo",
                 PlacedAt = new DateTime(2026, 5, 11),
                 Total = 5860,
-                Status = OrderStatus.Pending,
+                Status = OrderStatus.CREATED,
                 Delivery = DeliveryMethod.Courier,
                 Items = new List<OrderItem>(),
                 CustomerName = "Магомедали Гаджиев",
