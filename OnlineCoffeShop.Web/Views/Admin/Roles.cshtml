@@ -1,5 +1,42 @@
-﻿@{
-    ViewData["Title"] = "Пользователи";
+﻿@model IReadOnlyList<Role>
+@{
+    ViewData["Title"] = "Роли";
     Layout = "_AdminLayout";
 }
-<h1 class="admin-title">Пользователи</h1>
+<h1 class="admin-title">Роли</h1>
+
+<p style="text-align:right">
+    <a class="btn btn-cta" asp-action="AddRole">Добавить новую роль</a>
+</p>
+
+<table class="admin-table" style="width:100%;border-collapse:collapse;margin-top:16px">
+    <thead>
+    <tr>
+        <th style="text-align:left">#</th>
+        <th style="text-align:left">Наименование роли</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @{ var i = 1; }
+    @foreach (var role in Model)
+    {
+        <tr>
+            <td>@i</td>
+            <td>@role.Name</td>
+            <td style="text-align:right">
+                <form asp-action="DeleteRole" method="post" style="margin:0">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="name" value="@role.Name" />
+                    <button type="submit" class="btn btn-sm btn-ghost">Удалить</button>
+                </form>
+            </td>
+        </tr>
+        i++;
+    }
+    </tbody>
+</table>
+
+<p style="text-align:right;font-weight:700;margin-top:12px">
+    Общее количество ролей: @Model.Count
+</p>

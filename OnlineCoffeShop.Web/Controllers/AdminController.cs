@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineCoffeShop.Web.Models;
 using OnlineCoffeShop.Web.Models.Orders;
+using OnlineCoffeShop.Web.Models.Roles;
 using OnlineCoffeShop.Web.Repositories.Abstractions;
 
 namespace OnlineCoffeShop.Web.Controllers;
@@ -9,11 +10,13 @@ public class AdminController : Controller
 {
     private readonly IProductRepository _products;
     private readonly IOrderRepository _orders;
+    private readonly IRolesRepository _roles;
 
-    public AdminController(IProductRepository products, IOrderRepository orders)
+    public AdminController(IProductRepository products, IOrderRepository orders, IRolesRepository roles)
     {
         _products = products;
         _orders = orders;
+        _roles = roles;
     }
 
     // Точка входа кнопки: сразу открываем первый раздел — "Заказы"
@@ -38,7 +41,7 @@ public class AdminController : Controller
 
     public IActionResult Users() => View();
 
-    public IActionResult Roles() => View();
+    public IActionResult Roles() => View(_roles.GetAll());
 
     // --- Список всех товаров ---
     public IActionResult Products() => View(_products.GetAll);
@@ -156,5 +159,39 @@ public class AdminController : Controller
         }
 
         return result;
+    }
+
+    [HttpGet]
+    public IActionResult AddRole() => View(new AddRoleViewModel());
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult AddRole(AddRoleViewModel model)
+    {
+        // 1) Проверка валидности модели (Required, StringLength)
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+
+        // 2) Проверка, что такой роли ещё нет в хранилище
+        if (_roles.TryGetByName(model.Name) is not null)
+        {
+            // ошибка уровня модели — попадёт в asp-validation-summary
+            ModelState.AddModelError(string.Empty, "Такая роль уже существует");
+            return View(model);
+        }
+
+        _roles.Add(new Role { Name = model.Name });
+        return RedirectToAction(nameof(Roles));
+    }
+
+    // --- Удалить роль ---
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public IActionResult DeleteRole(string name)
+    {
+        _roles.Delete(name);
+        return RedirectToAction(nameof(Roles));
     }
 }
