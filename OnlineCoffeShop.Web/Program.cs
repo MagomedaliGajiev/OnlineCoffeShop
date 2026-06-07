@@ -19,6 +19,7 @@ builder.Services.AddScoped<IFavoritesRepository, SessionFavoritesRepository>();
 builder.Services.AddScoped<ICompareRepository, SessionCompareRepository>();
 builder.Services.AddScoped<ICartRepository, DbCartRepository>();
 builder.Services.AddSingleton<IOrderRepository, InMemoryOrderRepository>();
+builder.Services.AddSingleton<IRolesRepository, InMemoryRolesRepository>();
 
 builder.Services.AddSingleton(_ =>
 {

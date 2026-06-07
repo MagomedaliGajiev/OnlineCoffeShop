@@ -1,0 +1,26 @@
+﻿@model AddRoleViewModel
+@{
+    ViewData["Title"] = "Новая роль";
+    Layout = "_AdminLayout";
+}
+<h1 class="admin-title">@ViewData["Title"]</h1>
+
+<form asp-action="AddRole" method="post" class="admin-form">
+    @Html.AntiForgeryToken()
+
+    @* All = ошибки уровня модели (дубль) + сводка по всем свойствам *@
+    <div asp-validation-summary="All" class="field-error"></div>
+
+    <div class="form-row">
+        <label asp-for="Name" class="field-label"></label>
+        <input class="field" asp-for="Name" />
+        <span asp-validation-for="Name" class="field-error"></span>
+    </div>
+
+    <button type="submit" class="btn btn-cta">Создать</button>
+    <a class="btn btn-ghost" asp-action="Roles">Отмена</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
