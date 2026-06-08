@@ -3,8 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using OnlineCoffeShop.Web.Data;
 using OnlineCoffeShop.Web.Repositories;
 using OnlineCoffeShop.Web.Repositories.Abstractions;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration));
 
 builder.Services.AddControllersWithViews();
 
@@ -55,4 +59,16 @@ app.MapControllerRoute(
         pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
-app.Run();
+try
+{
+    Log.Information("Запуск приложения");
+    app.Run();
+}
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Приложение неожиданно остановилось");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
