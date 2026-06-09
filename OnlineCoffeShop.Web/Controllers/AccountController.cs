@@ -1,10 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using OnlineCoffeShop.Web.Models;
+using OnlineCoffeShop.Web.Models.Users;
+using OnlineCoffeShop.Web.Repositories.Abstractions;
 
 namespace OnlineCoffeShop.Web.Controllers;
 
 public class AccountController : Controller
 {
+    private readonly IUsersRepository _users;
+
+    public AccountController(IUsersRepository users)
+    {
+        _users = users;
+    }
+
     [HttpGet]
     public IActionResult Login(string? returnUrl = null)
     {
@@ -39,8 +48,27 @@ public class AccountController : Controller
         }
 
         // Сюда дошли — данные валидны.
-        // TODO: реальная логика входа (проверка пользователя в БД и т.п.)
-        return View(model);
+        // НОВОЕ: ищем пользователя и сверяем пароль
+        var user = _users.TryGetByEmail(model.Email);
+        if (user is null || user.Password != model.Password)
+        {
+            // Намеренно не уточняем, что именно неверно (email или пароль) —
+            // это стандартная практика безопасности.
+            ModelState.AddModelError(
+                string.Empty,
+                "Неверный email или пароль");
+
+            return View(model);
+        }
+
+        // Успех — пользователь найден и пароль совпал.
+        // Пока просто уходим на главную (или на returnUrl, если он есть).
+        if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+        {
+            return Redirect(model.ReturnUrl);
+        }
+
+        return RedirectToAction("Index", "Home");
     }
 
     [HttpGet]
@@ -66,7 +94,23 @@ public class AccountController : Controller
             return View(model);
         }
 
-        // TODO: сохранение нового пользователя.
-        return View(model);
+        // НОВОЕ: проверяем, что такой email ещё не зарегистрирован
+        if (_users.TryGetByEmail(model.Email) is not null)
+        {
+            ModelState.AddModelError(string.Empty,
+                "Пользователь с таким email уже зарегистрирован");
+            return View(model);
+        }
+
+        // НОВОЕ: сохраняем нового пользователя в памяти
+        _users.Add(new User()
+        {
+            Name = model.Name,
+            Email = model.Email,
+            Password = model.Password,
+        });
+
+        // После регистрации — на страницу входа
+        return RedirectToAction(nameof(Login));
     }
 }
