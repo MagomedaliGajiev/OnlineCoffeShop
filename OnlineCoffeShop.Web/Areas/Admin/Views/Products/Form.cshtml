@@ -6,7 +6,7 @@
 }
 <h1 class="admin-title">@ViewData["Title"]</h1>
 
-<form asp-action="@(isEdit ? "ProductEdit" : "ProductCreate")" method="post" class="admin-form">
+<form asp-area="Admin" asp-controller="Products" asp-action="@(isEdit ? "Edit" : "Create")" method="post" class="admin-form">
     @Html.AntiForgeryToken()
     <input type="hidden" asp-for="Id" />
     <div asp-validation-summary="ModelOnly" class="field-error"></div>
@@ -101,7 +101,7 @@
     </div>  
 
     <button type="submit" class="btn btn-cta">@(isEdit ? "Сохранить" : "Создать")</button>
-    <a class="btn btn-ghost" asp-action="Products">Отмена</a>
+    <a class="btn btn-ghost" asp-area="Admin" asp-controller="Products" asp-action="Index">Отмена</a>
 </form>
 
 @section Scripts {

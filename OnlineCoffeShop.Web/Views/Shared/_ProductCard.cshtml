@@ -9,7 +9,7 @@
         <partial name="_ProductArt" model="p" />
         @if (p.Tag == ProductTag.New) { <span class="tag tag-new corner-tag">NEW</span> }
         @if (p.Tag == ProductTag.Sale && p.OldPrice.HasValue) { <span class="tag tag-sale corner-tag">−@p.DiscountPercent%</span> }
-        <form method="post" asp-controller="Fav" asp-action="Toggle" asp-route-returnUrl="@Model.ReturnUrl" onclick="event.stopPropagation();">
+        <form method="post" asp-area="" asp-controller="Fav" asp-action="Toggle" asp-route-returnUrl="@Model.ReturnUrl" onclick="event.stopPropagation();">
             @Html.AntiForgeryToken()
             <input type="hidden" name="id" value="@p.Id" />
             <button type="submit" class="heart @(Model.IsFav ? "on" : "")" onclick="event.stopPropagation();">
@@ -18,7 +18,7 @@
                 </svg>
             </button>
         </form>
-        <form method="post" asp-controller="Compare" asp-action="Toggle" asp-route-returnUrl="@Model.ReturnUrl" onclick="event.stopPropagation();">
+        <form method="post" asp-area="" asp-controller="Compare" asp-action="Toggle" asp-route-returnUrl="@Model.ReturnUrl" onclick="event.stopPropagation();">
             @Html.AntiForgeryToken()
             <input type="hidden" name="id" value="@p.Id" />
             <button type="submit" class="compare-btn @(Compare.IsInCompare(p.Id) ? "on" : "")" title="Сравнить" onclick="event.stopPropagation();">
@@ -51,7 +51,7 @@
                     <span class="price-old">@p.OldPrice.Value.ToString("N0", new System.Globalization.CultureInfo("ru-RU")) ₽</span>
                 }
             </div>
-            <form method="post" asp-controller="Cart" asp-action="Add" asp-route-returnUrl="@Model.ReturnUrl" onclick="event.stopPropagation();">
+            <form method="post" asp-area="" asp-controller="Cart" asp-action="Add" asp-route-returnUrl="@Model.ReturnUrl" onclick="event.stopPropagation();">
                 @Html.AntiForgeryToken()
                 <input type="hidden" name="id" value="@p.Id" />
                 <button type="submit" class="btn btn-primary btn-sm" onclick="event.stopPropagation();">В корзину</button>

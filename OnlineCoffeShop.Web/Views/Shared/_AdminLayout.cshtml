@@ -1,19 +1,17 @@
 ﻿@{
     Layout = "_Layout";
-    // имя текущего action — чтобы подсветить активный пункт меню
-    var action = (ViewContext.RouteData.Values["action"] as string ?? "").ToLower();
-    string Active(string a) =>
-        action == a.ToLower() || (a == "Products" && action.StartsWith("product"))
-            ? "active" : "";
+    // теперь подсвечиваем по имени КОНТРОЛЛЕРА, а не action
+    var controller = (ViewContext.RouteData.Values["controller"] as string ?? "").ToLower();
+    string Active(string c) => controller == c.ToLower() ? "active" : "";
 }
 <div class="admin shell">
     <aside class="admin-side">
         <h3 class="admin-side-title">Администрирование</h3>
         <nav class="admin-menu">
-            <a class="admin-menu-item @Active("Orders")"   asp-controller="Admin" asp-action="Orders">Заказы</a>
-            <a class="admin-menu-item @Active("Users")"    asp-controller="Admin" asp-action="Users">Пользователи</a>
-            <a class="admin-menu-item @Active("Roles")"    asp-controller="Admin" asp-action="Roles">Роли</a>
-            <a class="admin-menu-item @Active("Products")" asp-controller="Admin" asp-action="Products">Товары</a>
+            <a class="admin-menu-item @Active("Orders")"   asp-area="Admin" asp-controller="Orders"   asp-action="Index">Заказы</a>
+            <a class="admin-menu-item @Active("Users")"    asp-area="Admin" asp-controller="Users"    asp-action="Index">Пользователи</a>
+            <a class="admin-menu-item @Active("Roles")"    asp-area="Admin" asp-controller="Roles"    asp-action="Index">Роли</a>
+            <a class="admin-menu-item @Active("Products")" asp-area="Admin" asp-controller="Products" asp-action="Index">Товары</a>
         </nav>
     </aside>
     <section class="admin-content">
