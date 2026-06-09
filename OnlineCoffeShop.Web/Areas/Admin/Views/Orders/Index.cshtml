@@ -29,7 +29,7 @@
             <td style="text-align:center">@o.PlacedAt.ToString("dd.MM.yyyy")</td>
             <td style="text-align:center">@o.PlacedAt.ToString("HH:mm")</td>
             <td style="text-align:right">
-                <a class="btn btn-sm btn-ghost" asp-action="OrderDetails" asp-route-id="@o.Id">Подробнее</a>
+                <a class="btn btn-sm btn-ghost" asp-area="Admin" asp-controller="Orders" asp-action="Details" asp-route-id="@o.Id">Подробнее</a>
             </td>
         </tr>
         i++;

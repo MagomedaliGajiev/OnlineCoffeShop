@@ -50,7 +50,7 @@
 </table>
 
 <!-- Форма смены статуса -->
-<form asp-action="UpdateOrderStatus" method="post" style="margin-top:24px;display:flex;gap:12px;align-items:center">
+<form asp-area="Admin" asp-controller="Orders" asp-action="UpdateStatus" method="post" style="margin-top:24px;display:flex;gap:12px;align-items:center">
     @Html.AntiForgeryToken()
     <input type="hidden" name="id" value="@Model.Id" />
 

@@ -32,6 +32,6 @@
 }
 
 <div style="margin-top:24px">
-    <a class="btn" asp-action="ProductEdit" asp-route-id="@Model.Id">Редактировать</a>
-    <a class="btn btn-ghost" asp-action="Products">← К списку</a>
+    <a class="btn" asp-area="Admin" asp-controller="Products" asp-action="Edit" asp-route-id="@Model.Id">Редактировать</a>
+    <a class="btn btn-ghost" asp-area="Admin" asp-controller="Products" asp-action="Index">← К списку</a>
 </div>
