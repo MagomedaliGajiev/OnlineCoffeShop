@@ -1762,3 +1762,41 @@ footer.bottombar .legal {
 .compare-name:hover { color: var(--emerald); }
 .compare-price { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; }
 .compare-card-actions { display: flex; flex-direction: column; gap: 8px; }
+
+/* ---- Модальное окно подтверждения ---- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(44, 28, 15, 0.55);   /* затемнение в тон --ink-3 */
+    display: none;                         /* по умолчанию скрыто */
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+}
+.modal-overlay.is-open {
+    display: flex;                         /* показываем при добавлении класса */
+}
+.modal-box {
+    background: var(--bg-cream);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 420px;
+    padding: 28px;
+}
+.modal-title {
+    font-family: var(--font-serif);
+    margin: 0 0 12px;
+    color: var(--ink);
+}
+.modal-text {
+    color: var(--ink-2);
+    margin: 0 0 24px;
+}
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}

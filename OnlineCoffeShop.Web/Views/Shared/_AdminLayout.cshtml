@@ -19,6 +19,18 @@
     </section>
 </div>
 
+<div id="confirm-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-box">
+        <h3 class="modal-title">Подтверждение удаления</h3>
+        <p class="modal-text" data-confirm-text></p>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" data-confirm-cancel>Отмена</button>
+            <button type="button" class="btn btn-danger" data-confirm-ok>Удалить</button>
+        </div>
+    </div>
+</div>
+
 @section Scripts {
     @await RenderSectionAsync("Scripts", required: false)
+    <script src="~/js/admin-confirm.js" asp-append-version="true"></script>
 }

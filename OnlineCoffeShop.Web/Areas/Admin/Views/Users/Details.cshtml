@@ -24,7 +24,7 @@
     <a class="btn" asp-area="Admin" asp-controller="Users" asp-action="Update" asp-route-id="@Model.Id">Редактирование данных</a>
     <a class="btn" asp-area="Admin" asp-controller="Users" asp-action="ChangeRole" asp-route-id="@Model.Id">Смена прав доступа</a>
     <form asp-area="Admin" asp-controller="Users" asp-action="Delete" asp-route-id="@Model.Id" method="post"
-          onsubmit="return confirm('Удалить пользователя @Model.Email?');" style="display:inline">
+          class="js-confirm-delete" data-confirm-message="Удалить пользователя @Model.Email?" style="display:inline">
         @Html.AntiForgeryToken()
         <button type="submit" class="btn btn-danger">Удалить пользователя</button>
     </form>

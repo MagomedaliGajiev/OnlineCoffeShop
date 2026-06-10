@@ -25,7 +25,8 @@
             <td>@i</td>
             <td>@role.Name</td>
             <td style="text-align:right">
-                <form asp-area="Admin" asp-controller="Roles" asp-action="Delete" method="post" style="margin:0">
+                <form asp-area="Admin" asp-controller="Roles" asp-action="Delete" method="post" style="margin:0"
+                      class="js-confirm-delete" data-confirm-message="Удалить роль «@role.Name»?">
                     @Html.AntiForgeryToken()
                     <input type="hidden" name="name" value="@role.Name" />
                     <button type="submit" class="btn btn-sm btn-ghost">Удалить</button>
