@@ -1,0 +1,42 @@
+﻿@model UserCreateViewModel
+@{
+    ViewData["Title"] = "Новый пользователь";
+    Layout = "_AdminLayout";
+}
+<h1 class="admin-title">Новый пользователь</h1>
+
+<form asp-area="Admin" asp-controller="Users" asp-action="Create" method="post" class="admin-form">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="All" class="field-error"></div>
+
+    <div class="form-row">
+        <label asp-for="FirstName" class="field-label"></label>
+        <input class="field" asp-for="FirstName" />
+        <span asp-validation-for="FirstName" class="field-error"></span>
+    </div>
+    <div class="form-row">
+        <label asp-for="LastName" class="field-label"></label>
+        <input class="field" asp-for="LastName" />
+        <span asp-validation-for="LastName" class="field-error"></span>
+    </div>
+    <div class="form-row">
+        <label asp-for="Email" class="field-label"></label>
+        <input class="field" asp-for="Email" />
+        <span asp-validation-for="Email" class="field-error"></span>
+    </div>
+    <div class="form-row">
+        <label asp-for="Phone" class="field-label"></label>
+        <input class="field" asp-for="Phone" />
+        <span asp-validation-for="Phone" class="field-error"></span>
+    </div>
+    <div class="form-row">
+        <label asp-for="Password" class="field-label"></label>
+        <input class="field" asp-for="Password" />
+        <span asp-validation-for="Password" class="field-error"></span>
+    </div>
+
+    <button type="submit" class="btn btn-cta">Создать</button>
+    <a class="btn btn-ghost" asp-area="Admin" asp-controller="Users" asp-action="Index">Отмена</a>
+</form>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
