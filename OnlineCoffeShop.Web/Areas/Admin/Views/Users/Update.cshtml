@@ -1,0 +1,38 @@
+﻿@model UserEditViewModel
+@{
+    ViewData["Title"] = "Редактирование пользователя";
+    Layout = "_AdminLayout";
+}
+<h1 class="admin-title">Редактирование пользователя</h1>
+
+<form asp-area="Admin" asp-controller="Users" asp-action="Update" method="post" class="admin-form">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="All" class="field-error"></div>
+
+    <div class="form-row">
+        <label asp-for="FirstName" class="field-label"></label>
+        <input class="field" asp-for="FirstName" />
+        <span asp-validation-for="FirstName" class="field-error"></span>
+    </div>
+    <div class="form-row">
+        <label asp-for="LastName" class="field-label"></label>
+        <input class="field" asp-for="LastName" />
+        <span asp-validation-for="LastName" class="field-error"></span>
+    </div>
+    <div class="form-row">
+        <label asp-for="Email" class="field-label"></label>
+        <input class="field" asp-for="Email" />
+        <span asp-validation-for="Email" class="field-error"></span>
+    </div>
+    <div class="form-row">
+        <label asp-for="Phone" class="field-label"></label>
+        <input class="field" asp-for="Phone" />
+        <span asp-validation-for="Phone" class="field-error"></span>
+    </div>
+
+    <button type="submit" class="btn btn-cta">Сохранить</button>
+    <a class="btn btn-ghost" asp-area="Admin" asp-controller="Users" asp-action="Details" asp-route-id="@Model.Id">Отмена</a>
+</form>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

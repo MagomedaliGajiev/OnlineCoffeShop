@@ -1,0 +1,29 @@
+﻿@model ChangeRoleViewModel
+@{
+    ViewData["Title"] = "Смена прав доступа";
+    Layout = "_AdminLayout";
+    var roles = ViewBag.Roles as IReadOnlyList<Role> ?? new List<Role>();
+}
+<h1 class="admin-title">Смена прав доступа</h1>
+
+<form asp-area="Admin" asp-controller="Users" asp-action="ChangeRole" method="post" class="admin-form">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <div asp-validation-summary="All" class="field-error"></div>
+
+    <div class="form-row">
+        <label asp-for="Role" class="field-label"></label>
+        <select class="field" asp-for="Role">
+            @foreach (var r in roles)
+            {
+                <option value="@r.Name">@r.Name</option>
+            }
+        </select>
+        <span asp-validation-for="Role" class="field-error"></span>
+    </div>
+
+    <button type="submit" class="btn btn-cta">Сохранить</button>
+    <a class="btn btn-ghost" asp-area="Admin" asp-controller="Users" asp-action="Details" asp-route-id="@Model.Id">Отмена</a>
+</form>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

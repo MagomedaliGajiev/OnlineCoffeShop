@@ -1,5 +1,54 @@
-﻿@{
+﻿@model IReadOnlyList<User>
+@{
     ViewData["Title"] = "Пользователи";
     Layout = "_AdminLayout";
 }
 <h1 class="admin-title">Пользователи</h1>
+
+@if (Model.Count == 0)
+{
+    <p style="text-align:center;font-size:1.4rem;margin:32px 0">В хранилище нет пользователей!</p>
+    <p style="text-align:center">
+        <a class="btn btn-cta" asp-area="Admin" asp-controller="Users" asp-action="Create">Добавить нового пользователя</a>
+    </p>
+}
+else
+{
+    <p style="text-align:right">
+        <a class="btn btn-cta" asp-area="Admin" asp-controller="Users" asp-action="Create">Добавить нового пользователя</a>
+    </p>
+
+    <table class="admin-table" style="width:100%;border-collapse:collapse;margin-top:16px">
+        <thead>
+        <tr>
+            <th style="text-align:left">#</th>
+            <th style="text-align:left">Email (логин)</th>
+            <th style="text-align:left">Имя</th>
+            <th style="text-align:left">Фамилия</th>
+            <th style="text-align:left">Телефон</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @{ var i = 1; }
+        @foreach (var u in Model)
+        {
+            <tr>
+                <td>@i</td>
+                <td>@u.Email</td>
+                <td>@u.FirstName</td>
+                <td>@u.LastName</td>
+                <td>@u.Phone</td>
+                <td style="text-align:right">
+                    <a class="btn btn-sm btn-ghost" asp-area="Admin" asp-controller="Users" asp-action="Details" asp-route-id="@u.Id">Подробнее</a>
+                </td>
+            </tr>
+            i++;
+        }
+        </tbody>
+    </table>
+
+    <p style="text-align:right;font-weight:700;margin-top:12px">
+        Общее количество пользователей: @Model.Count
+    </p>
+}

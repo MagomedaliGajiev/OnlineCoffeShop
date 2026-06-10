@@ -105,7 +105,7 @@ public class AccountController : Controller
         // НОВОЕ: сохраняем нового пользователя в памяти
         _users.Add(new User()
         {
-            Name = model.Name,
+            FirstName = model.Name,
             Email = model.Email,
             Password = model.Password,
         });

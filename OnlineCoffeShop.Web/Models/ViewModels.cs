@@ -269,3 +269,84 @@ public class AddRoleViewModel
     [Display(Name = "Наименование роли", Prompt = "Например: Manager")]
     public string Name { get; set; } = string.Empty;
 }
+
+// Добавление нового пользователя из админки
+public class UserCreateViewModel
+{
+    [Required(ErrorMessage = "Укажите имя")]
+    [Display(Name = "Имя", Prompt = "Магомедали")]
+    public string FirstName { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Укажите фамилию")]
+    [Display(Name = "Фамилия", Prompt = "Гаджиев")]
+    public string LastName { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Введите email")]
+    [EmailAddress(ErrorMessage = "Некорректный email")]
+    [Display(Name = "Email (логин)", Prompt = "your@email.com")]
+    public string Email { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Укажите телефон")]
+    [Phone(ErrorMessage = "Некорректный телефон")]
+    [Display(Name = "Телефон", Prompt = "+7 ___ ___ __ __")]
+    public string Phone { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Введите пароль")]
+    [DataType(DataType.Password)]
+    [StringLength(50, MinimumLength = 6, ErrorMessage = "Пароль должен быть от 6 до 50 символов")]
+    [Display(Name = "Пароль", Prompt = "минимум 6 символов")]
+    public string Password { get; set; } = string.Empty;
+}
+
+// Редактирование данных (без пароля — он меняется отдельно)
+public class UserEditViewModel
+{
+    public Guid Id { get; set; }
+
+    [Required(ErrorMessage = "Укажите имя")]
+    [Display(Name = "Имя")]
+    public string FirstName { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Укажите фамилию")]
+    [Display(Name = "Фамилия")]
+    public string LastName { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Введите email")]
+    [EmailAddress(ErrorMessage = "Некорректный email")]
+    [Display(Name = "Email (логин)")]
+    public string Email { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Укажите телефон")]
+    [Phone(ErrorMessage = "Некорректный телефон")]
+    [Display(Name = "Телефон")]
+    public string Phone { get; set; } = string.Empty;
+}
+
+// Смена пароля (два поля)
+public class ChangePasswordViewModel
+{
+    public Guid Id { get; set; }
+
+    [Required(ErrorMessage = "Введите новый пароль")]
+    [DataType(DataType.Password)]
+    [StringLength(50, MinimumLength = 6, ErrorMessage = "Пароль должен быть от 6 до 50 символов")]
+    [Display(Name = "Новый пароль", Prompt = "минимум 6 символов")]
+    public string NewPassword { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Повторите пароль")]
+    [DataType(DataType.Password)]
+    [Compare(nameof(NewPassword), ErrorMessage = "Пароли не совпадают")]
+    [Display(Name = "Повторите пароль", Prompt = "ещё раз тот же пароль")]
+    public string ConfirmPassword { get; set; } = string.Empty;
+}
+
+// Смена прав доступа (опционально)
+public class ChangeRoleViewModel
+{
+    public Guid Id { get; set; }
+
+    [Required(ErrorMessage = "Выберите роль")]
+    [Display(Name = "Роль")]
+    public string Role { get; set; } = string.Empty;
+}
+

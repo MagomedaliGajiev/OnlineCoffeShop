@@ -1,0 +1,31 @@
+﻿@model User
+@{
+    ViewData["Title"] = "Пользователь";
+    Layout = "_AdminLayout";
+}
+<div class="admin-head" style="display:flex;justify-content:space-between;align-items:center">
+    <h1 class="admin-title">Пользователь</h1>
+    <a class="btn btn-ghost" asp-area="Admin" asp-controller="Users" asp-action="Index">← К списку</a>
+</div>
+
+<dl class="admin-details">
+    <dt>ID</dt>               <dd>@Model.Id</dd>
+    <dt>Email (логин)</dt>    <dd>@Model.Email</dd>
+    <dt>Имя</dt>              <dd>@Model.FirstName</dd>
+    <dt>Фамилия</dt>          <dd>@Model.LastName</dd>
+    <dt>Телефон</dt>          <dd>@Model.Phone</dd>
+    <dt>Роль</dt>             <dd>@Model.Role</dd>
+    <dt>Дата регистрации</dt>
+    <dd>@Model.RegisterDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm:ss")</dd>
+</dl>
+
+<div class="admin-actions" style="margin-top:24px">
+    <a class="btn" asp-area="Admin" asp-controller="Users" asp-action="ChangePassword" asp-route-id="@Model.Id">Смена пароля</a>
+    <a class="btn" asp-area="Admin" asp-controller="Users" asp-action="Update" asp-route-id="@Model.Id">Редактирование данных</a>
+    <a class="btn" asp-area="Admin" asp-controller="Users" asp-action="ChangeRole" asp-route-id="@Model.Id">Смена прав доступа</a>
+    <form asp-area="Admin" asp-controller="Users" asp-action="Delete" asp-route-id="@Model.Id" method="post"
+          onsubmit="return confirm('Удалить пользователя @Model.Email?');" style="display:inline">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-danger">Удалить пользователя</button>
+    </form>
+</div>
