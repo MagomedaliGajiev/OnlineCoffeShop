@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OnlineCoffeShop.Web.Models;
+using OnlineCoffeShop.Web.Areas.Admin.Models;
 using OnlineCoffeShop.Web.Models.Roles;
 using OnlineCoffeShop.Web.Repositories.Abstractions;
 
